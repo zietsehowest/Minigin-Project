@@ -11,9 +11,9 @@ dae::TextObject::TextObject(const std::string& text, const std::shared_ptr<Font>
 	: m_NeedsUpdate(true), m_Text(text), m_Font(font), m_Texture(nullptr)
 { }
 
-void dae::TextObject::Update()
+void dae::TextObject::Update(float deltaTime)
 {
-	if (m_NeedsUpdate)
+	if (m_NeedsUpdate && deltaTime !=0.f) //this delta time is just to fix temp error need to remove later !
 	{
 		const SDL_Color color = { 255,255,255 }; // only white text is supported now
 		const auto surf = TTF_RenderText_Blended(m_Font->GetFont(), m_Text.c_str(), color);

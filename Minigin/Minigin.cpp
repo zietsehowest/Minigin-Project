@@ -82,16 +82,18 @@ void dae::Minigin::Run()
 		auto& input = InputManager::GetInstance();
 
 		bool doContinue = true;
+
+		auto lastTime = high_resolution_clock::now(); //get time before frame
 		while (doContinue)
 		{
-			const auto currentTime = high_resolution_clock::now();
-			
+			auto currentTime = high_resolution_clock::now(); //get time before all updates start of each fraem
+			float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+
 			doContinue = input.ProcessInput();
-			sceneManager.Update();
+			sceneManager.Update(deltaTime);
 			renderer.Render();
 			
-			auto sleepTime = duration_cast<duration<float>>(currentTime + milliseconds(MsPerFrame) - high_resolution_clock::now());
-			this_thread::sleep_for(sleepTime);
+			lastTime = currentTime;
 		}
 	}
 
