@@ -1,7 +1,9 @@
 #pragma once
 #include "Transform.h"
 #include "SceneObject.h"
-
+#include <map>
+#include "BaseComponent.h"
+#include "MiniginPCH.h"
 namespace dae
 {
 	class Texture2D;
@@ -11,8 +13,11 @@ namespace dae
 		void Update(float) override;
 		void Render() const override;
 
-		void SetTexture(const std::string& filename);
 		void SetPosition(float x, float y);
+
+		bool AddComponent(const ComponentType& type);
+		
+		std::map<ComponentType, std::shared_ptr<BaseComponent>> GetComponents() const; //why can't this be inline ?
 
 		GameObject() = default;
 		virtual ~GameObject();
@@ -23,6 +28,6 @@ namespace dae
 
 	private:
 		Transform m_Transform;
-		std::shared_ptr<Texture2D> m_Texture{};
+		std::map<ComponentType, std::shared_ptr<BaseComponent>> m_Components;
 	};
 }

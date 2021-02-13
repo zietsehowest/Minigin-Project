@@ -2,23 +2,39 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
-
+#include "RenderComponent.h"
 dae::GameObject::~GameObject() = default;
 
 void dae::GameObject::Update(float){}
 
 void dae::GameObject::Render() const
 {
-	const auto pos = m_Transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
+	for (auto component : m_Components)
+	{
+		component.second->Render(m_Transform);
+	}
 }
-
-void dae::GameObject::SetTexture(const std::string& filename)
+std::map<dae::ComponentType, std::shared_ptr<dae::BaseComponent>> dae::GameObject::GetComponents() const
 {
-	m_Texture = ResourceManager::GetInstance().LoadTexture(filename);
+	return m_Components;
 }
-
 void dae::GameObject::SetPosition(float x, float y)
 {
 	m_Transform.SetPosition(x, y, 0.0f);
 }
+
+bool dae::GameObject::AddComponent(const ComponentType& type)
+{
+	auto it = std::find_if(m_Components.begin(), m_Components.end(), [type](const std::pair<ComponentType, std::shared_ptr <BaseComponent>>& c)
+		{
+			return type == c.first;
+		});
+	if (it != m_Components.end())
+		return false;
+	else
+	{
+		m_Components[type] = std::make_shared<RenderComponent>();
+	}
+	return true;
+}
+
