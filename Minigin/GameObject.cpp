@@ -3,9 +3,16 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 #include "RenderComponent.h"
+#include "TextComponent.h"
 dae::GameObject::~GameObject() = default;
 
-void dae::GameObject::Update(float){}
+void dae::GameObject::Update(float elapsedSec)
+{
+	for (auto component : m_Components)
+	{
+		component.second->Update(elapsedSec);
+	}
+}
 
 void dae::GameObject::Render() const
 {
@@ -33,7 +40,15 @@ bool dae::GameObject::AddComponent(const ComponentType& type)
 		return false;
 	else
 	{
-		m_Components[type] = std::make_shared<RenderComponent>();
+		switch (type)
+		{
+		case ComponentType::render:
+			m_Components[type] = std::make_shared<RenderComponent>();
+			break;
+		case ComponentType::text:
+			m_Components[type] = std::make_shared<TextComponent>();
+		}
+		
 	}
 	return true;
 }

@@ -55,10 +55,12 @@ void dae::Minigin::LoadGame() const
 	go->SetPosition(216, 180);
 	scene.Add(go);
 
-	/*auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	auto to = std::make_shared<TextObject>("Programming 4 Assignment", font);
-	to->SetPosition(80, 20);
-	scene.Add(to);*/
+	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	go = std::make_shared<GameObject>();
+	go->AddComponent(ComponentType::text);
+	go->GetComponents()[ComponentType::text]->SetText("Programming 4 Assignment", font, SDL_Color{ 255,255,255});
+	go->SetPosition(80, 20);
+	scene.Add(go);
 }
 
 void dae::Minigin::Cleanup()

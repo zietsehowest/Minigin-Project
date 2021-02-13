@@ -11,6 +11,8 @@ namespace dae
 
 		virtual void SetTexture(const std::string& filename) override;
 
+		virtual void SetText(const std::string& text, const std::shared_ptr<Font>& font, const SDL_Color color) override;
+
 		RenderComponent() = default;
 		virtual ~RenderComponent();
 		RenderComponent(const RenderComponent& other) = delete;

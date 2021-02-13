@@ -8,7 +8,7 @@ dae::RenderComponent::~RenderComponent()
 }
 
 void dae::RenderComponent::Update(float) {};
-
+void dae::RenderComponent::SetText(const std::string&, const std::shared_ptr<Font>&, const SDL_Color) {};
 void dae::RenderComponent::Render(const Transform& transform) const
 {
 	const auto pos = transform.GetPosition();
