@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include "RenderComponent.h"
 #include "TextComponent.h"
+#include "FPSComponent.h"
 dae::GameObject::~GameObject() = default;
 
 void dae::GameObject::Update(float elapsedSec)
@@ -29,7 +30,6 @@ void dae::GameObject::SetPosition(float x, float y)
 {
 	m_Transform.SetPosition(x, y, 0.0f);
 }
-
 bool dae::GameObject::AddComponent(const ComponentType& type)
 {
 	auto it = std::find_if(m_Components.begin(), m_Components.end(), [type](const std::pair<ComponentType, std::shared_ptr <BaseComponent>>& c)
@@ -47,8 +47,11 @@ bool dae::GameObject::AddComponent(const ComponentType& type)
 			break;
 		case ComponentType::text:
 			m_Components[type] = std::make_shared<TextComponent>();
+			break;
+		case ComponentType::fps:
+			m_Components[type] = std::make_shared<FPSComponent>();
+			break;
 		}
-		
 	}
 	return true;
 }

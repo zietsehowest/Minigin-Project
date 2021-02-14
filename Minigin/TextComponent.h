@@ -14,6 +14,7 @@ namespace dae
 
 		virtual void SetTexture(const std::string& filename) override;
 
+		void SetNeedsUpdate() { m_NeedsUpdate = true; }
 		TextComponent() = default;
 		virtual ~TextComponent();
 		TextComponent(const TextComponent& other) = delete;

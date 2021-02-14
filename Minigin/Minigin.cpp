@@ -11,6 +11,8 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include "RenderComponent.h"
+#include "TextComponent.h"
+#include "FPSComponent.h"
 using namespace std;
 using namespace std::chrono;
 using namespace dae;
@@ -46,20 +48,26 @@ void dae::Minigin::LoadGame() const
 
 	auto go = std::make_shared<GameObject>();
 	go->AddComponent(ComponentType::render);
-	go->GetComponents()[ComponentType::render]->SetTexture("background.jpg");
+	go->GetComponent<RenderComponent>(ComponentType::render)->SetTexture("background.jpg");
 	scene.Add(go);
 
 	go = std::make_shared<GameObject>();
 	go->AddComponent(ComponentType::render);
-	go->GetComponents()[ComponentType::render]->SetTexture("logo.png");
+	go->GetComponent<RenderComponent>(ComponentType::render)->SetTexture("logo.png");
 	go->SetPosition(216, 180);
 	scene.Add(go);
 
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	go = std::make_shared<GameObject>();
 	go->AddComponent(ComponentType::text);
-	go->GetComponents()[ComponentType::text]->SetText("Programming 4 Assignment", font, SDL_Color{ 255,255,255});
-	go->SetPosition(80, 20);
+	go->GetComponent<TextComponent>(ComponentType::text)->SetText("Programming 4 Assignment", font, SDL_Color{ 255,255,255});
+	go->SetPosition(90, 30);
+	scene.Add(go);
+
+	go = std::make_shared<GameObject>();
+	go->AddComponent(ComponentType::fps);
+	go->GetComponent<FPSComponent>(ComponentType::fps)->SetText("60", font, SDL_Color{ 255,0,0 });
+	go->SetPosition(20, 20);
 	scene.Add(go);
 }
 
