@@ -48,7 +48,7 @@ void dae::Renderer::RenderCustomImguiUI() const
 {
 	static bool checkBox = false;
 
-	ImGui::Begin("Minigin_Testing_Interface");
+	ImGui::Begin("Window");
 	ImGui::Text("test");
 	ImGui::Checkbox("Toggle", &checkBox);
 	ImGui::End();
