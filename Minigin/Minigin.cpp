@@ -17,6 +17,7 @@ using namespace std::chrono;
 using namespace dae;
 void dae::Minigin::Initialize()
 {
+
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
