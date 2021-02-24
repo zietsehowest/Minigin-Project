@@ -22,38 +22,45 @@ void dae::Renderer::Init(SDL_Window * window)
 	ImGui_ImplOpenGL2_Init();
 }
 
-void dae::Renderer::Render() const
+void dae::Renderer::Render()
 {
-	bool ShowDemo = false;
 	SDL_RenderClear(m_Renderer);
 
 	SceneManager::GetInstance().Render();
 
-	//Rendering of the Imgui framework
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_Window);
 	ImGui::NewFrame();
 
-	if (ShowDemo)
-		ImGui::ShowDemoWindow(&ShowDemo);
-
-	RenderCustomImguiUI();
-	ImGui::EndFrame();
+	//Rendering of the Imgui framework
+	if (m_ShowDemo)
+		RenderImguiDemo();
+	else
+		RenderCustomImguiUI();
+	
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-	
 	SDL_RenderPresent(m_Renderer);
 }
-void dae::Renderer::RenderCustomImguiUI() const
+void dae::Renderer::RenderCustomImguiUI()
 {
+	
 	static bool checkBox = false;
-
+	static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
 	ImGui::Begin("Window");
-	ImGui::Text("test");
-	ImGui::Checkbox("Toggle", &checkBox);
+	ImGui::Text("Gamemodes:");
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(7.0f, 0.6f, 0.6f));
+	if (ImGui::Button("Single Player", ImVec2{ 100.f,25.f }))
+		std::cout << "Single Player pressed";
+	ImGui::Button("co-op", ImVec2{ 100.f,25.f });
+	ImGui::Button("Versus", ImVec2{ 100.f,25.f });
+	ImGui::PopStyleColor(1);
 	ImGui::End();
 }
-
+void dae::Renderer::RenderImguiDemo()
+{
+	ImGui::ShowDemoWindow(&m_ShowDemo);
+}
 void dae::Renderer::Destroy()
 {
 	ImGui_ImplOpenGL2_Shutdown();

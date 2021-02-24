@@ -69,6 +69,11 @@ void dae::Minigin::LoadGame() const
 	go->GetComponent<FPSComponent>(ComponentType::fps)->SetText("60", font, SDL_Color{ 255,0,0 });
 	go->SetPosition(20, 20);
 	scene.Add(go);
+
+	InputManager::GetInstance().AddControlInput({ VK_PAD_A,InputType::released }, std::make_shared<FireCommand>());
+	InputManager::GetInstance().AddControlInput({ VK_PAD_B,InputType::released }, std::make_shared<DuckCommand>());
+	InputManager::GetInstance().AddControlInput({ VK_PAD_X,InputType::released }, std::make_shared<JumpCommand>());
+	InputManager::GetInstance().AddControlInput({ VK_PAD_Y,InputType::released }, std::make_shared<FartCommand>());
 }
 
 void dae::Minigin::Cleanup()
