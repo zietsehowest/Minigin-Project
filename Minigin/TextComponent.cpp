@@ -5,7 +5,10 @@
 #include "Renderer.h"
 #include "Texture2D.h"
 dae::TextComponent::~TextComponent() {};
-void dae::TextComponent::SetTexture(const std::string&) {};
+dae::TextComponent::TextComponent(std::shared_ptr<GameObject> parent) : BaseComponent(parent)
+{
+
+}
 void dae::TextComponent::Update(float elapsedSec)
 {
 	if (m_NeedsUpdate && elapsedSec != 0.f) //need to fix this elapsedSec later !

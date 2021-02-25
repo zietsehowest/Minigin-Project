@@ -21,6 +21,21 @@ void Scene::Update(float deltaTime)
 	{
 		object->Update(deltaTime);
 	}
+
+	m_Objects.erase(std::remove_if(m_Objects.begin(), m_Objects.end(), [](std::shared_ptr<SceneObject>& s) {
+		auto gameObjectCast = std::dynamic_pointer_cast<GameObject>(s);
+		if (gameObjectCast == nullptr)
+		{
+			return false;
+		}
+		if (!gameObjectCast->GetIsActive())
+		{
+			return true;
+		}
+		else
+			return false;
+		}));
+	
 }
 
 void Scene::Render() const

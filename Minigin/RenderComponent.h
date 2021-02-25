@@ -2,6 +2,7 @@
 #include "BaseComponent.h"
 namespace dae
 {
+	class GameObject;
 	class Texture2D;
 	class RenderComponent : public BaseComponent
 	{
@@ -9,11 +10,9 @@ namespace dae
 		virtual void Update(float) override;
 		virtual void Render(const Transform& transform) const override;
 
-		virtual void SetTexture(const std::string& filename) override;
+		void SetTexture(const std::string& filename);
 
-		virtual void SetText(const std::string& text, const std::shared_ptr<Font>& font, const SDL_Color color) override;
-
-		RenderComponent() = default;
+		RenderComponent(std::shared_ptr<GameObject> parent);
 		virtual ~RenderComponent();
 		RenderComponent(const RenderComponent& other) = delete;
 		RenderComponent(RenderComponent&& other) = delete;

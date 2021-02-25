@@ -5,23 +5,21 @@
 namespace dae
 {
 	class Font;
+	class GameObject;
 	class BaseComponent
 	{
 	public:
 		virtual void Update(float) = 0;
 		virtual void Render(const Transform& transform) const = 0;
 
-		virtual void SetTexture(const std::string& filename) = 0;
-
-		virtual void SetText(const std::string& text,const std::shared_ptr<Font>& font,const SDL_Color) = 0;
-
-		BaseComponent() = default;
+		BaseComponent(std::shared_ptr<GameObject> parent);
 		virtual ~BaseComponent() = default;
 		BaseComponent(const BaseComponent& other) = delete;
 		BaseComponent(BaseComponent&& other) = delete;
 		BaseComponent& operator=(const BaseComponent& other) = delete;
 		BaseComponent& operator=(BaseComponent&& other) = delete;
-
+	protected:
+		std::weak_ptr<GameObject> m_pParent;
 	};
 }
 

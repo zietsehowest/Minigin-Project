@@ -2,6 +2,10 @@
 #include "FPSComponent.h"
 #include <chrono>
 #include <string>
+dae::FPSComponent::FPSComponent(std::shared_ptr<GameObject>& parent) : BaseComponent(parent)
+{
+	m_TextComponent = std::make_shared<TextComponent>(parent);
+}
 dae::FPSComponent::~FPSComponent() {};
 void dae::FPSComponent::Update(float elapsedSec)
 {

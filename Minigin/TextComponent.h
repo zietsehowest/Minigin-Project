@@ -10,12 +10,10 @@ namespace dae
 		virtual void Update(float) override;
 		virtual void Render(const Transform& transform) const override;
 
-		virtual void SetText(const std::string& text, const std::shared_ptr<Font>& font,const SDL_Color color) override;
+		void SetText(const std::string& text, const std::shared_ptr<Font>& font,const SDL_Color color);
 
-		virtual void SetTexture(const std::string& filename) override;
-
-		void SetNeedsUpdate() { m_NeedsUpdate = true; }
-		TextComponent() = default;
+		inline void SetNeedsUpdate() { m_NeedsUpdate = true; }
+		TextComponent(std::shared_ptr<GameObject> parent);
 		virtual ~TextComponent();
 		TextComponent(const TextComponent& other) = delete;
 		TextComponent(TextComponent&& other) = delete;

@@ -2,13 +2,13 @@
 #include "RenderComponent.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
-dae::RenderComponent::~RenderComponent()
+#include "GameObject.h"
+dae::RenderComponent::~RenderComponent(){}
+dae::RenderComponent::RenderComponent(std::shared_ptr<GameObject> parent) : BaseComponent(parent)
 {
 
 }
-
 void dae::RenderComponent::Update(float) {};
-void dae::RenderComponent::SetText(const std::string&, const std::shared_ptr<Font>&, const SDL_Color) {};
 void dae::RenderComponent::Render(const Transform& transform) const
 {
 	const auto pos = transform.GetPosition();
