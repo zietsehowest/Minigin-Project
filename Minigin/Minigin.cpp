@@ -149,7 +149,6 @@ void dae::Minigin::LoadGame() const
 	InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_RIGHT,InputType::released }, std::make_shared<CatchingSlickAndSamCommand>(player2));
 
 	InputManager::GetInstance().AddControlInput({ VK_PAD_A,InputType::released }, std::make_shared<Killcommand>(player2));
-
 }
 
 void dae::Minigin::Cleanup()
