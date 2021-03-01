@@ -10,7 +10,7 @@ Scene::Scene(const std::string& name) : m_Name(name) {}
 
 Scene::~Scene() = default;
 
-void Scene::Add(const std::shared_ptr<SceneObject>& object)
+void Scene::Add(const std::shared_ptr<GameObject>& object)
 {
 	m_Objects.push_back(object);
 }
@@ -21,21 +21,19 @@ void Scene::Update(float deltaTime)
 	{
 		object->Update(deltaTime);
 	}
+	auto temp = std::remove_if(m_Objects.begin(), m_Objects.end(), [](std::shared_ptr<GameObject>& s) {
 
-	m_Objects.erase(std::remove_if(m_Objects.begin(), m_Objects.end(), [](std::shared_ptr<SceneObject>& s) {
-		auto gameObjectCast = std::dynamic_pointer_cast<GameObject>(s);
-		if (gameObjectCast == nullptr)
+		if (s->GetIsActive())
 		{
 			return false;
-		}
-		if (!gameObjectCast->GetIsActive())
-		{
-			return true;
 		}
 		else
-			return false;
-		}));
-	
+			return true;
+		});
+	if (temp != m_Objects.end())
+	{
+		m_Objects.erase(temp, m_Objects.end());
+	}
 }
 
 void Scene::Render() const

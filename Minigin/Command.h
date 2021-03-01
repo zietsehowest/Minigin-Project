@@ -34,3 +34,4 @@ public:
 private:
 	void Fart() { std::cout << "Fart \n"; };
 };
+

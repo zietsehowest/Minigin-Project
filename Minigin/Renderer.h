@@ -28,6 +28,7 @@ namespace dae
 
 		int GetOpenGLDriverIndex();
 		void RenderCustomImguiUI();
+		void RenderInstructionMenuUI();
 		void RenderImguiDemo();
 	};
 }

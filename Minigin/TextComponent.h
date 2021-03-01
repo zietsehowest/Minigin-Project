@@ -13,6 +13,11 @@ namespace dae
 		void SetText(const std::string& text, const std::shared_ptr<Font>& font,const SDL_Color color);
 
 		inline void SetNeedsUpdate() { m_NeedsUpdate = true; }
+
+		inline const std::shared_ptr<Font>& GetFont() const { return m_pFont; };
+		
+		inline const std::shared_ptr<SDL_Color>& GetColor() const { return m_pColor; };
+
 		TextComponent(std::shared_ptr<GameObject> parent);
 		virtual ~TextComponent();
 		TextComponent(const TextComponent& other) = delete;

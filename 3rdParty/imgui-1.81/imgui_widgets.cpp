@@ -1,3 +1,4 @@
+#include "../../Minigin/MiniginPCH.h"
 // dear imgui, v1.81
 // (widgets code)
 
@@ -6188,6 +6189,7 @@ void ImGui::EndListBox()
 {
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
+    g; window;
     IM_ASSERT((window->Flags & ImGuiWindowFlags_ChildWindow) && "Mismatched BeginListBox/EndListBox calls. Did you test the return value of BeginListBox?");
 
     EndChildFrame();

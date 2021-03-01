@@ -5,6 +5,7 @@
 #include "BaseComponent.h"
 #include "MiniginPCH.h"
 #include "RenderComponent.h"
+#include "SubjectComponent.h"
 #include <algorithm>
 namespace dae
 {
@@ -55,11 +56,6 @@ namespace dae
 				if (temp.lock() != nullptr)
 					return temp;
 			}
-			/*std::for_each(begin(m_Components), end(m_Components), [temp](std::shared_ptr<BaseComponent> c) 
-				{
-					if (std::dynamic_pointer_cast<T>(c) != nullptr)
-						temp = std::make_shared<T>(c);
-				});*/
 			return temp;
 		}
 	private:

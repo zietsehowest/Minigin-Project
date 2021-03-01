@@ -4,8 +4,8 @@
 #include "SceneManager.h"
 #include "Texture2D.h"
 #include "imgui.h"
-#include "backends/imgui_impl_opengl2.h"
-#include "backends/imgui_impl_sdl.h"
+#include <backends/imgui_impl_opengl2.h>
+#include <backends/imgui_impl_sdl.h>
 
 void dae::Renderer::Init(SDL_Window * window)
 {
@@ -37,6 +37,8 @@ void dae::Renderer::Render()
 		RenderImguiDemo();
 	else
 		RenderCustomImguiUI();
+
+	RenderInstructionMenuUI();
 	
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
@@ -44,7 +46,6 @@ void dae::Renderer::Render()
 }
 void dae::Renderer::RenderCustomImguiUI()
 {
-	
 	static bool checkBox = false;
 	static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
 	ImGui::Begin("Window");
@@ -55,6 +56,20 @@ void dae::Renderer::RenderCustomImguiUI()
 	ImGui::Button("co-op", ImVec2{ 100.f,25.f });
 	ImGui::Button("Versus", ImVec2{ 100.f,25.f });
 	ImGui::PopStyleColor(1);
+	ImGui::End();
+}
+void dae::Renderer::RenderInstructionMenuUI()
+{
+	ImGui::Begin("Instructions");
+
+	ImGui::TextColored((ImVec4)ImColor::HSV(7.0f, 0.6f, 0.6f), "Here are the controls to the commands for observer demo\n");
+	
+	ImGui::TextColored((ImVec4)ImColor::HSV(0.0f, 100.0f, 100.0f), "Player 1 Controls:\n");
+	ImGui::Text("Kill: DPAD_UP\nColorChange: LTHUMB_UP\nFlyingDisc: LTHUMB_DOWN\nEndOfStage: LTHUMB_LEFT\nCatchingSlickAndSam: LTHUMB_RIGHT");
+
+	ImGui::TextColored((ImVec4)ImColor::HSV(240.0f, 100.0f, 100.0f), "Player 2 Controls:\n");
+	ImGui::Text("Kill: PAD_A\nColorChange: RTHUMB_UP\nFlyingDisc: RTHUMB_DOWN\nEndOfStage: RTHUMB_LEFT\nCatchingSlickAndSam: RTHUMB_RIGHT");
+	
 	ImGui::End();
 }
 void dae::Renderer::RenderImguiDemo()
