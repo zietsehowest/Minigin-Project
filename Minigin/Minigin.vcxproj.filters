@@ -135,6 +135,15 @@
     <ClInclude Include="CatchingSlickAndSamCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
+    <ClInclude Include="AudioSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameAudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MiniginPCH.cpp">
@@ -232,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="CatchingSlickAndSamCommand.cpp">
       <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="GameAudio.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -11,6 +11,9 @@
 #include "Scene.h"
 #include "CharacterObserver.h"
 #include "Observer.h"
+#include "AudioSystem.h"
+#include "ServiceLocator.h"
+#include "GameAudio.h"
 #pragma region ComponentIncludes
 #include "RenderComponent.h"
 #include "TextComponent.h"
@@ -31,9 +34,22 @@ using namespace dae;
 void dae::Minigin::Initialize()
 {
 
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
 	{
 		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
+	}
+
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		std::cerr << "Core::Initialize( ), error when calling Mix_OpenAudio: " << Mix_GetError() << std::endl;
+		return;
+	}
+
+	//Initialize SDL_Mixer
+	const int mixerFlags{ MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG };
+	if ((Mix_Init(mixerFlags) & mixerFlags) != mixerFlags)
+	{
+		std::cerr << "SDL Mixer failed to initialize! Cause of the error: " << Mix_GetError();
 	}
 
 	m_Window = SDL_CreateWindow(
@@ -82,7 +98,7 @@ void dae::Minigin::LoadGame() const
 	go->AddComponent(std::make_shared<FPSComponent>(go));
 	go->GetComponent<FPSComponent>().lock()->SetText("60", font, SDL_Color{ 255,0,0 });
 	go->SetPosition(20, 20);
-	scene.Add(go);
+	scene.Add(go);	
 	
 #pragma region QBert
 	//lives display
@@ -149,6 +165,12 @@ void dae::Minigin::LoadGame() const
 	InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_RIGHT,InputType::released }, std::make_shared<CatchingSlickAndSamCommand>(player2));
 
 	InputManager::GetInstance().AddControlInput({ VK_PAD_A,InputType::released }, std::make_shared<Killcommand>(player2));
+
+	//memory leak fix later !!!!
+	ServiceLocator::register_sound_system(new GameAudio("../Data/Q-bert_Death_Sound.wav"));
+
+	auto& t1 = ServiceLocator::get_audio_system();
+	t1.Play(-1, 1);
 }
 
 void dae::Minigin::Cleanup()
@@ -156,6 +178,8 @@ void dae::Minigin::Cleanup()
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(m_Window);
 	m_Window = nullptr;
+	Mix_CloseAudio();
+	Mix_Quit();
 	SDL_Quit();
 }
 
