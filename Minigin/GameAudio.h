@@ -1,9 +1,9 @@
 #pragma once
 #include "MiniginPCH.h"
-#include "AudioSystem.h"
+#include "Audio.h"
 namespace dae
 {
-	class GameAudio : public AudioSystem
+	class GameAudio : public Audio
 	{
 	public:
 		GameAudio(const std::string& path);

@@ -135,7 +135,7 @@
     <ClInclude Include="CatchingSlickAndSamCommand.h">
       <Filter>Commands</Filter>
     </ClInclude>
-    <ClInclude Include="AudioSystem.h">
+    <ClInclude Include="Audio.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="GameAudio.h">
@@ -143,6 +143,12 @@
     </ClInclude>
     <ClInclude Include="ServiceLocator.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NullAudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioLogger.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -243,6 +249,9 @@
       <Filter>Commands</Filter>
     </ClCompile>
     <ClCompile Include="GameAudio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ServiceLocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

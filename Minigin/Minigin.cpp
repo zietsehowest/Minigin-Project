@@ -11,7 +11,7 @@
 #include "Scene.h"
 #include "CharacterObserver.h"
 #include "Observer.h"
-#include "AudioSystem.h"
+#include "Audio.h"
 #include "ServiceLocator.h"
 #include "GameAudio.h"
 #pragma region ComponentIncludes
@@ -167,10 +167,10 @@ void dae::Minigin::LoadGame() const
 	InputManager::GetInstance().AddControlInput({ VK_PAD_A,InputType::released }, std::make_shared<Killcommand>(player2));
 
 	//memory leak fix later !!!!
-	ServiceLocator::register_sound_system(new GameAudio("../Data/Q-bert_Death_Sound.wav"));
+	ServiceLocator::provide(new GameAudio("../Data/Q-bert_Death_Sound.wav"));
 
-	auto& t1 = ServiceLocator::get_audio_system();
-	t1.Play(-1, 1);
+	auto t1 = ServiceLocator::getAudio();
+	t1->Play(-1, 1);
 }
 
 void dae::Minigin::Cleanup()

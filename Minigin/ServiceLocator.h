@@ -1,14 +1,15 @@
 #pragma once
 namespace dae
 {
-	class AudioSystem;
-	class ServiceLocator final
+	class Audio;
+	class NullAudio;
+	class ServiceLocator
 	{
 	public:
-		static AudioSystem& get_audio_system() { return *_as_instance; }
-		static void register_sound_system(AudioSystem* as) { _as_instance = as; }
+		static Audio* getAudio();
+		static void provide(Audio* service);
 	private:
-		static  AudioSystem* _as_instance;
+		static Audio* m_Service;
+		static NullAudio m_NullService;
 	};
-	AudioSystem* ServiceLocator::_as_instance{};
 }

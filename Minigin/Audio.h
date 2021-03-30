@@ -3,10 +3,10 @@
 #include <memory>
 namespace dae
 {
-	class AudioSystem
+	class Audio
 	{
 	public:
-		virtual ~AudioSystem() = default;
+		virtual ~Audio() = default;
 		virtual bool Play(int soundID, int loop) const = 0;
 		virtual void Stop(int soundID) = 0;
 		virtual void StopAllSounds() = 0;
