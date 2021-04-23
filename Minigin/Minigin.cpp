@@ -11,9 +11,14 @@
 #include "Scene.h"
 #include "CharacterObserver.h"
 #include "Observer.h"
+
+#pragma region AudioIncludes
 #include "Audio.h"
 #include "ServiceLocator.h"
+#include "AudioLogger.h"
 #include "GameAudio.h"
+#pragma endregion
+
 #pragma region ComponentIncludes
 #include "RenderComponent.h"
 #include "TextComponent.h"
@@ -21,6 +26,7 @@
 #include "SubjectComponent.h"
 #include "StatsComponent.h"
 #pragma endregion
+
 #pragma region CommandIncludes
 #include "KillCommand.h"
 #include "flyingDiscCoilyCommand.h"
@@ -28,6 +34,7 @@
 #include "endOfStageCommand.h"
 #include "ColorChangeCommand.h"
 #pragma endregion
+
 using namespace std;
 using namespace std::chrono;
 using namespace dae;
@@ -167,7 +174,7 @@ void dae::Minigin::LoadGame() const
 	InputManager::GetInstance().AddControlInput({ VK_PAD_A,InputType::released }, std::make_shared<Killcommand>(player2));
 
 	//memory leak fix later !!!!
-	ServiceLocator::provide(new GameAudio("../Data/Q-bert_Death_Sound.wav"));
+	ServiceLocator::provide(new AudioLogger(new GameAudio("../Data/Q-bert_Death_Sound.wav"));
 
 	auto t1 = ServiceLocator::getAudio();
 	t1->Play(-1, 1);
