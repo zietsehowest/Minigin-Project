@@ -1,5 +1,6 @@
+#include "Game.h"
 #include "MiniginPCH.h"
-#include "Minigin.h"
+#include "Core.h"
 #include <chrono>
 #include <thread>
 #include "InputManager.h"
@@ -38,47 +39,7 @@
 using namespace std;
 using namespace std::chrono;
 using namespace GameEngine;
-void GameEngine::Minigin::Initialize()
-{
-
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
-	{
-		throw std::runtime_error(std::string("SDL_Init Error: ") + SDL_GetError());
-	}
-
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-	{
-		std::cerr << "Core::Initialize( ), error when calling Mix_OpenAudio: " << Mix_GetError() << std::endl;
-		return;
-	}
-
-	//Initialize SDL_Mixer
-	const int mixerFlags{ MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG };
-	if ((Mix_Init(mixerFlags) & mixerFlags) != mixerFlags)
-	{
-		std::cerr << "SDL Mixer failed to initialize! Cause of the error: " << Mix_GetError();
-	}
-
-	m_Window = SDL_CreateWindow(
-		"QBird Game - Boonen Zietse",
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
-		640,
-		480,
-		SDL_WINDOW_OPENGL
-	);
-	if (m_Window == nullptr) 
-	{
-		throw std::runtime_error(std::string("SDL_CreateWindow Error: ") + SDL_GetError());
-	}
-
-	Renderer::GetInstance().Init(m_Window);
-}
-
-/**
- * Code constructing the scene world starts here
- */
-void GameEngine::Minigin::LoadGame() const
+void Game::LoadGame() const
 {
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 
@@ -96,7 +57,7 @@ void GameEngine::Minigin::LoadGame() const
 	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 	go = std::make_shared<GameObject>();
 	go->AddComponent(std::make_shared<TextComponent>(go));
-	go->GetComponent<TextComponent>().lock()->SetText("Programming 4 Assignment", font, SDL_Color{ 255,255,255});
+	go->GetComponent<TextComponent>().lock()->SetText("Programming 4 Assignment", font, SDL_Color{ 255,255,255 });
 	go->SetPosition(90, 30);
 	scene.Add(go);
 
@@ -105,14 +66,14 @@ void GameEngine::Minigin::LoadGame() const
 	go->AddComponent(std::make_shared<FPSComponent>(go));
 	go->GetComponent<FPSComponent>().lock()->SetText("60", font, SDL_Color{ 255,0,0 });
 	go->SetPosition(20, 20);
-	scene.Add(go);	
-	
+	scene.Add(go);
+
 #pragma region QBert
 	//lives display
 	auto lives = std::make_shared<GameObject>();
 	lives->AddComponent(std::make_shared<TextComponent>(lives));
-	lives->GetComponent<TextComponent>().lock()->SetText("Lives: 3", font, SDL_Color{ 0,0,255});
-	lives->SetPosition(90,370);
+	lives->GetComponent<TextComponent>().lock()->SetText("Lives: 3", font, SDL_Color{ 0,0,255 });
+	lives->SetPosition(90, 370);
 	scene.Add(lives);
 
 	//score display
@@ -126,13 +87,13 @@ void GameEngine::Minigin::LoadGame() const
 	auto QBert = std::make_shared<GameObject>();
 	QBert->AddComponent(std::make_shared<RenderComponent>(QBert));
 	QBert->GetComponent<RenderComponent>().lock()->SetTexture("Qbert.png");
-	QBert->AddComponent(std::make_shared<StatsComponent>(QBert,3));
+	QBert->AddComponent(std::make_shared<StatsComponent>(QBert, 3));
 	QBert->AddComponent(std::make_shared<SubjectComponent>(QBert));
-	QBert->GetComponent<SubjectComponent>().lock()->AddObserver(std::make_shared<CharacterObserver>(lives->GetComponent<TextComponent>(),score->GetComponent<TextComponent>()));
+	QBert->GetComponent<SubjectComponent>().lock()->AddObserver(std::make_shared<CharacterObserver>(lives->GetComponent<TextComponent>(), score->GetComponent<TextComponent>()));
 	QBert->SetPosition(50, 150);
 	scene.Add(QBert);
 #pragma endregion QBertInitialize
-	
+
 #pragma region Player2
 	//lives display
 	auto lives2 = std::make_shared<GameObject>();
@@ -164,7 +125,7 @@ void GameEngine::Minigin::LoadGame() const
 	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_LEFT,InputType::released }, std::make_shared<endOfStageCommand>(QBert));
 	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_RIGHT,InputType::released }, std::make_shared<CatchingSlickAndSamCommand>(QBert));
 
-	InputManager::GetInstance().AddControlInput({ VK_PAD_DPAD_UP,InputType::released },std::make_shared<Killcommand>(QBert));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_DPAD_UP,InputType::released }, std::make_shared<Killcommand>(QBert));
 
 	InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_UP,InputType::released }, std::make_shared<ColorChangeCommand>(player2));
 	InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_DOWN,InputType::released }, std::make_shared<flyingDiscCoilyCommand>(player2));
@@ -177,46 +138,4 @@ void GameEngine::Minigin::LoadGame() const
 	auto t1 = ServiceLocator::getAudio();
 	t1->AddSound("DeathSound", "../Data/Q-bert_Death_Sound.wav");
 	t1->Play("DeathSound", 1);
-}
-
-void GameEngine::Minigin::Cleanup()
-{
-	Renderer::GetInstance().Destroy();
-	SDL_DestroyWindow(m_Window);
-	m_Window = nullptr;
-	Mix_CloseAudio();
-	Mix_Quit();
-	SDL_Quit();
-}
-
-void GameEngine::Minigin::Run()
-{
-	Initialize();
-
-	// tell the resource manager where he can find the game data
-	ResourceManager::GetInstance().Init("../Data/");
-
-	LoadGame();
-
-	{
-		auto& renderer = Renderer::GetInstance();
-		auto& sceneManager = SceneManager::GetInstance();
-		auto& input = InputManager::GetInstance();
-
-		bool doContinue = true;
-		auto lastTime = high_resolution_clock::now(); //get time before frame
-		while (doContinue)
-		{
-			auto currentTime = high_resolution_clock::now(); //get time before all updates start of each fraem
-			float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
-
-			doContinue = input.ProcessInput();
-			sceneManager.Update(deltaTime);
-			renderer.Render();
-			
-			lastTime = currentTime;
-		}
-	}
-
-	Cleanup();
 }

@@ -2,7 +2,7 @@
 struct SDL_Window;
 namespace GameEngine
 {
-	class Minigin
+	class Core
 	{
 	public:
 		void Initialize();
