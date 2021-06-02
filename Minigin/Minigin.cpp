@@ -60,7 +60,7 @@ void GameEngine::Minigin::Initialize()
 	}
 
 	m_Window = SDL_CreateWindow(
-		"Programming 4 assignment",
+		"QBird Game - Boonen Zietse",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		640,

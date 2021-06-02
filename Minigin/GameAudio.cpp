@@ -32,7 +32,7 @@ bool GameAudio::Play(int soundID, int loop)
 }
 void GameAudio::Update()
 {
-	while (m_Quit)
+	while (!m_Quit)
 	{
 		//hold program until we can lock mutex
 		std::unique_lock<std::mutex> lock(m_Mutex);
