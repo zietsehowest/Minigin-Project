@@ -5,7 +5,7 @@ namespace dae
 	class NullAudio : public Audio
 	{
 	public:
-		virtual bool Play(int, int) const override { return false;/* Empty body */ };
+		virtual bool Play(int, int) override { return false;/* Empty body */ };
 		virtual void Stop(int) override { /* Empty body */ };
 		virtual void StopAllSounds() { /* Empty body */ };
 		virtual void SetVolume(int) { /* Empty body */ };

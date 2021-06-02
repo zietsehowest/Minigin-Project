@@ -174,7 +174,7 @@ void dae::Minigin::LoadGame() const
 	InputManager::GetInstance().AddControlInput({ VK_PAD_A,InputType::released }, std::make_shared<Killcommand>(player2));
 
 	//memory leak fix later !!!!
-	ServiceLocator::provide(new AudioLogger(new GameAudio("../Data/Q-bert_Death_Sound.wav"));
+	ServiceLocator::provide(new AudioLogger(new GameAudio("../Data/Q-bert_Death_Sound.wav")));
 
 	auto t1 = ServiceLocator::getAudio();
 	t1->Play(-1, 1);
