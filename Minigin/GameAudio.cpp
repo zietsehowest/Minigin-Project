@@ -1,30 +1,28 @@
 #include "MiniginPCH.h"
 #include "GameAudio.h"
 using namespace GameEngine;
-GameAudio::GameAudio(const std::string& path)
+GameAudio::GameAudio()
 	:m_Thread(&GameAudio::Update,this)
 {
-	m_pMixChunk = Mix_LoadWAV(path.c_str());
-
-	if (m_pMixChunk == nullptr)
-	{
-		std::string errorMsg = "SoundEffect: Failed to load " + path + ",\nSDL_mixer Error: " + Mix_GetError();
-		std::cerr << errorMsg;
-	}
+	
 }
 GameAudio::~GameAudio()
 {
-	Mix_FreeChunk(m_pMixChunk);
-	m_pMixChunk = nullptr;
+	for (auto audioPair : m_pMixChunks)
+	{
+		Mix_FreeChunk(audioPair.second);
+		audioPair.second = nullptr;
+	}
 	m_Quit = true;
 	m_Condition.notify_one();
 	m_Thread.join();
 }
-bool GameAudio::Play(int soundID, int loop)
+bool GameAudio::Play(const std::string& soundName, int loop)
 {
-	if (m_pMixChunk != nullptr)
+	auto it = std::find_if(m_pMixChunks.begin(), m_pMixChunks.end(), [soundName](const AudioPair& a) {return a.first == soundName; });
+	if (it != m_pMixChunks.end())
 	{
-		m_Queue.push(std::make_pair(soundID, loop));
+		m_Queue.push(std::make_pair(soundName, loop));
 		return true;
 	}
 	else
@@ -41,7 +39,7 @@ void GameAudio::Update()
 		//we can now use this lock without causing the thread to interfere with other threads
 		if (!m_Queue.empty())
 		{
-			Mix_PlayChannel(m_Queue.front().first, m_pMixChunk, m_Queue.front().second);
+			Mix_PlayChannel(-1, m_pMixChunks[m_Queue.front().first], m_Queue.front().second);
 			m_Queue.pop();
 		}
 
@@ -59,16 +57,36 @@ void GameAudio::StopAllSounds()
 {
 	Mix_HaltChannel(-1);
 }
-void GameAudio::SetVolume(int value)
+void GameAudio::SetVolume(const std::string& sound,int value)
 {
-	if (m_pMixChunk != nullptr)
-		Mix_VolumeChunk(m_pMixChunk,value);
+	if (m_pMixChunks[sound] != nullptr)
+		Mix_VolumeChunk(m_pMixChunks[sound],value);
 }
-int GameAudio::GetVolume() const
+int GameAudio::GetVolume(const std::string& sound) const
 {
-	if (m_pMixChunk != nullptr)
-		return Mix_VolumeChunk(m_pMixChunk, -1);
+	if (m_pMixChunks.at(sound) != nullptr)
+		return Mix_VolumeChunk(m_pMixChunks.at(sound), -1);
 	else
 		return -1;
+}
+
+bool GameEngine::GameAudio::AddSound(const std::string& soundName, const std::string& soundPath)
+{
+	auto it = std::find_if(m_pMixChunks.begin(), m_pMixChunks.end(), [soundName](const AudioPair& a) {return a.first == soundName; });
+	if (it != m_pMixChunks.end())
+		return false;
+	else
+	{
+		auto tempChunk = Mix_LoadWAV(soundPath.c_str());
+
+		if (tempChunk == nullptr)
+		{
+			std::string errorMsg = "SoundEffect: Failed to load " + soundPath + ",\nSDL_mixer Error: " + Mix_GetError();
+			std::cerr << errorMsg;
+			return false;
+		}
+		m_pMixChunks.emplace(soundName, tempChunk);
+		return true;
+	}
 }
 

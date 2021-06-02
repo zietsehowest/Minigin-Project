@@ -12,10 +12,15 @@ namespace GameEngine
 		{
 			delete m_WrappedAudio;
 		}
-		virtual bool Play(int soundID, int loop) override
+		virtual bool Play(const std::string& soundName, int loop) override
 		{
 			log("Play Sound");
-			return m_WrappedAudio->Play(soundID, loop);
+			return m_WrappedAudio->Play(soundName, loop);
+		}
+		virtual bool AddSound(const std::string& soundName, const std::string& soundPath) override
+		{
+			log("Adding Sound");
+			return m_WrappedAudio->AddSound(soundName, soundPath);
 		}
 		virtual void Stop(int soundID)
 		{
@@ -27,15 +32,15 @@ namespace GameEngine
 			log("Stop all sounds");
 			m_WrappedAudio->StopAllSounds();
 		}
-		virtual void SetVolume(int value)
+		virtual void SetVolume(const std::string& sound, int value)
 		{
 			log("Setting volume of sound");
-			m_WrappedAudio->SetVolume(value);
+			m_WrappedAudio->SetVolume(sound,value);
 		}
-		virtual int GetVolume() const
+		virtual int GetVolume(const std::string& sound) const
 		{
 			log("Getting the volume of the sound");
-			return m_WrappedAudio->GetVolume();
+			return m_WrappedAudio->GetVolume(sound);
 		}
 	private:
 		void log(const char* message) const
