@@ -1,7 +1,7 @@
 #pragma once
 #include "Singleton.h"
 
-namespace dae
+namespace GameEngine
 {
 	class Scene;
 	class SceneManager final : public Singleton<SceneManager>

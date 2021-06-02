@@ -1,6 +1,6 @@
 #pragma once
 struct SDL_Window;
-namespace dae
+namespace GameEngine
 {
 	class Minigin
 	{

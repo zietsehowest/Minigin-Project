@@ -1,7 +1,7 @@
 #pragma once
 #include "MiniginPCH.h"
 #include <memory>
-namespace dae
+namespace GameEngine
 {
 	class Audio
 	{

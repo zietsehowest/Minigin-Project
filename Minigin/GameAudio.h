@@ -4,7 +4,7 @@
 #include <thread>
 #include <queue>
 #include <mutex>
-namespace dae
+namespace GameEngine
 {
 	class GameAudio : public Audio
 	{

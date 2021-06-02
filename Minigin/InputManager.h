@@ -7,7 +7,7 @@
 #include "Command.h"
 #include <memory>
 #include <map>
-namespace dae
+namespace GameEngine
 {
 	enum class InputType
 	{

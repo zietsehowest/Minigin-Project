@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include "StatsComponent.h"
 #include <string>
-namespace dae
+namespace GameEngine
 {
 	class CharacterObserver : public Observer
 	{

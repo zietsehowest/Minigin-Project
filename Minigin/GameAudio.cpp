@@ -1,6 +1,6 @@
 #include "MiniginPCH.h"
 #include "GameAudio.h"
-using namespace dae;
+using namespace GameEngine;
 GameAudio::GameAudio(const std::string& path)
 	:m_Thread(&GameAudio::Update,this)
 {

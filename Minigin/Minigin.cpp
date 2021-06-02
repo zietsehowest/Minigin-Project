@@ -37,8 +37,8 @@
 
 using namespace std;
 using namespace std::chrono;
-using namespace dae;
-void dae::Minigin::Initialize()
+using namespace GameEngine;
+void GameEngine::Minigin::Initialize()
 {
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
@@ -78,7 +78,7 @@ void dae::Minigin::Initialize()
 /**
  * Code constructing the scene world starts here
  */
-void dae::Minigin::LoadGame() const
+void GameEngine::Minigin::LoadGame() const
 {
 	auto& scene = SceneManager::GetInstance().CreateScene("Demo");
 
@@ -180,7 +180,7 @@ void dae::Minigin::LoadGame() const
 	t1->Play(-1, 1);
 }
 
-void dae::Minigin::Cleanup()
+void GameEngine::Minigin::Cleanup()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(m_Window);
@@ -190,7 +190,7 @@ void dae::Minigin::Cleanup()
 	SDL_Quit();
 }
 
-void dae::Minigin::Run()
+void GameEngine::Minigin::Run()
 {
 	Initialize();
 

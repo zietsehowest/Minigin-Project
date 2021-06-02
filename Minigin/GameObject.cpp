@@ -5,9 +5,9 @@
 #include "RenderComponent.h"
 #include "TextComponent.h"
 #include "FPSComponent.h"
-dae::GameObject::~GameObject() = default;
+GameEngine::GameObject::~GameObject() = default;
 
-void dae::GameObject::Update(float elapsedSec)
+void GameEngine::GameObject::Update(float elapsedSec)
 {
 	for (auto component : m_Components)
 	{
@@ -15,18 +15,18 @@ void dae::GameObject::Update(float elapsedSec)
 	}
 }
 
-void dae::GameObject::Render() const
+void GameEngine::GameObject::Render() const
 {
 	for (auto component : m_Components)
 	{
 		component->Render(m_Transform);
 	}
 }
-std::vector<std::shared_ptr<dae::BaseComponent>> dae::GameObject::GetComponents() const
+std::vector<std::shared_ptr<GameEngine::BaseComponent>> GameEngine::GameObject::GetComponents() const
 {
 	return m_Components;
 }
-void dae::GameObject::SetPosition(float x, float y)
+void GameEngine::GameObject::SetPosition(float x, float y)
 {
 	m_Transform.SetPosition(x, y, 0.0f);
 }

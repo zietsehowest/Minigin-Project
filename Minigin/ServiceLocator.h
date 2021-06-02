@@ -1,5 +1,5 @@
 #pragma once
-namespace dae
+namespace GameEngine
 {
 	class Audio;
 	class NullAudio;

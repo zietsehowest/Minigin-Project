@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include "BaseComponent.h"
-namespace dae
+namespace GameEngine
 {
 	class StatsComponent : public BaseComponent
 	{

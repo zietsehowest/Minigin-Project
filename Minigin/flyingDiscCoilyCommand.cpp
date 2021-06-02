@@ -2,7 +2,7 @@
 #include "flyingDiscCoilyCommand.h"
 #include "GameObject.h"
 #include "StatsComponent.h"
-void dae::flyingDiscCoilyCommand::AddScore()
+void GameEngine::flyingDiscCoilyCommand::AddScore()
 {
 	if (!m_Target.expired() && !m_Target.lock()->GetComponent<StatsComponent>().expired())
 	{

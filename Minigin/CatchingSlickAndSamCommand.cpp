@@ -2,7 +2,7 @@
 #include "CatchingSlickAndSamCommand.h"
 #include "GameObject.h"
 #include "StatsComponent.h"
-void dae::CatchingSlickAndSamCommand::AddScore()
+void GameEngine::CatchingSlickAndSamCommand::AddScore()
 {
 	if (!m_Target.expired() && !m_Target.lock()->GetComponent<StatsComponent>().expired())
 	{

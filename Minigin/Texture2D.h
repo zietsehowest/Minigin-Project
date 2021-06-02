@@ -1,6 +1,6 @@
 #pragma once
 struct SDL_Texture;
-namespace dae
+namespace GameEngine
 {
 	/**
 	 * Simple RAII wrapper for an SDL_Texture

@@ -3,7 +3,7 @@
 #include <SDL.h>
 
 
-bool dae::InputManager::ProcessInput()
+bool GameEngine::InputManager::ProcessInput()
 {
 	//Reading the input
 	RtlSecureZeroMemory(&m_KeyStroke, sizeof(XINPUT_KEYSTROKE));
@@ -40,7 +40,7 @@ bool dae::InputManager::ProcessInput()
 
 	return ProcessKeyBoardInput();
 }
-bool dae::InputManager::ProcessKeyBoardInput()
+bool GameEngine::InputManager::ProcessKeyBoardInput()
 {
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
@@ -58,11 +58,11 @@ bool dae::InputManager::ProcessKeyBoardInput()
 	}
 	return true;
 }
-void dae::InputManager::AddControlInput(KeyInput key, const std::shared_ptr<Command>& command)
+void GameEngine::InputManager::AddControlInput(KeyInput key, const std::shared_ptr<Command>& command)
 {
 	m_ControlCommands[key] = command;
 }
-bool dae::InputManager::IsKeyPressed(int keyId) const
+bool GameEngine::InputManager::IsKeyPressed(int keyId) const
 {
 	if (keyId == m_KeyStroke.VirtualKey)
 	{

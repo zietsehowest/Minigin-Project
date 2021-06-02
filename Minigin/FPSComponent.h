@@ -1,7 +1,7 @@
 #pragma once
 #include "TextComponent.h"
 #include "BaseComponent.h"
-namespace dae
+namespace GameEngine
 {
 	class FPSComponent : public BaseComponent
 	{

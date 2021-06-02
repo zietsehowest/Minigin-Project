@@ -2,7 +2,7 @@
 #include "ColorChangeCommand.h"
 #include "GameObject.h"
 #include "StatsComponent.h"
-void dae::ColorChangeCommand::AddScore()
+void GameEngine::ColorChangeCommand::AddScore()
 {
 	if (!m_Target.expired() && !m_Target.lock()->GetComponent<StatsComponent>().expired())
 	{

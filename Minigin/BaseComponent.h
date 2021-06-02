@@ -2,7 +2,7 @@
 #include "Transform.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
-namespace dae
+namespace GameEngine
 {
 	class Font;
 	class GameObject;

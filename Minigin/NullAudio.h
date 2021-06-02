@@ -1,6 +1,6 @@
 #pragma once
 #include "Audio.h"
-namespace dae
+namespace GameEngine
 {
 	class NullAudio : public Audio
 	{

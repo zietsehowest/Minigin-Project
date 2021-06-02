@@ -4,12 +4,12 @@
 #include "Font.h"
 #include "Renderer.h"
 #include "Texture2D.h"
-dae::TextComponent::~TextComponent() {};
-dae::TextComponent::TextComponent(std::shared_ptr<GameObject> parent) : BaseComponent(parent)
+GameEngine::TextComponent::~TextComponent() {};
+GameEngine::TextComponent::TextComponent(std::shared_ptr<GameObject> parent) : BaseComponent(parent)
 {
 
 }
-void dae::TextComponent::Update(float elapsedSec)
+void GameEngine::TextComponent::Update(float elapsedSec)
 {
 	if (m_NeedsUpdate && elapsedSec != 0.f) //need to fix this elapsedSec later !
 	{
@@ -29,7 +29,7 @@ void dae::TextComponent::Update(float elapsedSec)
 	}
 }
 
-void dae::TextComponent::Render(const Transform& transform) const
+void GameEngine::TextComponent::Render(const Transform& transform) const
 {
 	if (m_pTexture != nullptr)
 	{
@@ -38,7 +38,7 @@ void dae::TextComponent::Render(const Transform& transform) const
 	}
 }
 
-void dae::TextComponent::SetText(const std::string& text, const std::shared_ptr<Font>& font,const SDL_Color color)
+void GameEngine::TextComponent::SetText(const std::string& text, const std::shared_ptr<Font>& font,const SDL_Color color)
 {
 	m_Text = text;
 	m_NeedsUpdate = true;

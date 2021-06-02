@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #pragma warning(pop)
 
-namespace dae
+namespace GameEngine
 {
 	class Transform final
 	{

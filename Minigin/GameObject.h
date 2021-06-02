@@ -7,7 +7,7 @@
 #include "RenderComponent.h"
 #include "SubjectComponent.h"
 #include <algorithm>
-namespace dae
+namespace GameEngine
 {
 	class Texture2D;
 	class GameObject final : public SceneObject

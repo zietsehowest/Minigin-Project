@@ -2,13 +2,13 @@
 #include "ServiceLocator.h"
 #include "NullAudio.h"
 #include "Audio.h"
-dae::NullAudio dae::ServiceLocator::m_NullService{};
-dae::Audio* dae::ServiceLocator::m_Service = &m_NullService;
-dae::Audio* dae::ServiceLocator::getAudio()
+GameEngine::NullAudio GameEngine::ServiceLocator::m_NullService{};
+GameEngine::Audio* GameEngine::ServiceLocator::m_Service = &m_NullService;
+GameEngine::Audio* GameEngine::ServiceLocator::getAudio()
 {
 	return m_Service;
 }
-void dae::ServiceLocator::provide(Audio* service)
+void GameEngine::ServiceLocator::provide(Audio* service)
 {
 	m_Service = service;
 }

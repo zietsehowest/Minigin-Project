@@ -2,12 +2,12 @@
 #include "StatsComponent.h"
 #include "GameObject.h"
 #include "SubjectComponent.h"
-dae::StatsComponent::StatsComponent(std::shared_ptr<GameObject>& parent,int startLives) : BaseComponent(parent)
+GameEngine::StatsComponent::StatsComponent(std::shared_ptr<GameObject>& parent,int startLives) : BaseComponent(parent)
 	,m_Lives{startLives}
 	,m_Score{0}
 {
 }
-void dae::StatsComponent::Attack()
+void GameEngine::StatsComponent::Attack()
 {
 	m_Lives--;
 	if (m_pParent.lock()->GetComponent<SubjectComponent>().lock())
@@ -17,7 +17,7 @@ void dae::StatsComponent::Attack()
 		m_pParent.lock()->SetIsActive(false);
 	}
 }
-void dae::StatsComponent::ChangeScore(int points)
+void GameEngine::StatsComponent::ChangeScore(int points)
 {
 	m_Score += points;
 	if (m_pParent.lock()->GetComponent<SubjectComponent>().lock())

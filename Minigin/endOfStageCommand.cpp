@@ -2,7 +2,7 @@
 #include "endOfStageCommand.h"
 #include "GameObject.h"
 #include "StatsComponent.h"
-void dae::endOfStageCommand::AddScore()
+void GameEngine::endOfStageCommand::AddScore()
 {
 	if (!m_Target.expired() && !m_Target.lock()->GetComponent<StatsComponent>().expired())
 	{

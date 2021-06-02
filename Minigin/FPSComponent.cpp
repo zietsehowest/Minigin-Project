@@ -2,12 +2,12 @@
 #include "FPSComponent.h"
 #include <chrono>
 #include <string>
-dae::FPSComponent::FPSComponent(std::shared_ptr<GameObject>& parent) : BaseComponent(parent)
+GameEngine::FPSComponent::FPSComponent(std::shared_ptr<GameObject>& parent) : BaseComponent(parent)
 {
 	m_TextComponent = std::make_shared<TextComponent>(parent);
 }
-dae::FPSComponent::~FPSComponent() {};
-void dae::FPSComponent::Update(float elapsedSec)
+GameEngine::FPSComponent::~FPSComponent() {};
+void GameEngine::FPSComponent::Update(float elapsedSec)
 {
 	static std::chrono::time_point<std::chrono::steady_clock> oldTime = std::chrono::high_resolution_clock::now();
 	static int tempFps; tempFps++;
@@ -24,7 +24,7 @@ void dae::FPSComponent::Update(float elapsedSec)
 		m_TextComponent->Update(elapsedSec);
 	}
 }
-void dae::FPSComponent::Render(const Transform& transform) const
+void GameEngine::FPSComponent::Render(const Transform& transform) const
 {
 	if (m_TextComponent != nullptr)
 	{
@@ -32,14 +32,14 @@ void dae::FPSComponent::Render(const Transform& transform) const
 		m_TextComponent->Render(transform);
 	}
 }
-void dae::FPSComponent::SetText(const std::string&, const std::shared_ptr<Font>& font, const SDL_Color color)
+void GameEngine::FPSComponent::SetText(const std::string&, const std::shared_ptr<Font>& font, const SDL_Color color)
 {
 	m_TextComponent->SetText(std::to_string(m_Fps),font,color);
 	m_pFont = font;
 	m_pColor = std::make_shared<SDL_Color>(color);
 
 }
-void dae::FPSComponent::UpdateText()
+void GameEngine::FPSComponent::UpdateText()
 {
 	m_TextComponent->SetText(std::to_string(m_Fps), m_pFont, *m_pColor);
 }

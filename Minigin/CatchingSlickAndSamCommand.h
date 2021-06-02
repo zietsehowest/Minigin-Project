@@ -1,6 +1,6 @@
 #pragma once
 #include "Command.h"
-namespace dae
+namespace GameEngine
 {
 	class GameObject;
 	class CatchingSlickAndSamCommand final : public Command

@@ -3,7 +3,7 @@
 #include <vector>
 #include "BaseComponent.h"
 #include "Observer.h"
-namespace dae
+namespace GameEngine
 {
 	class SubjectComponent : public BaseComponent
 	{

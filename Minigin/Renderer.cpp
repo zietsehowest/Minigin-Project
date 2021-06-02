@@ -7,7 +7,7 @@
 #include <backends/imgui_impl_opengl2.h>
 #include <backends/imgui_impl_sdl.h>
 
-void dae::Renderer::Init(SDL_Window * window)
+void GameEngine::Renderer::Init(SDL_Window * window)
 {
 	m_Window = window;
 	m_Renderer = SDL_CreateRenderer(window,GetOpenGLDriverIndex(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -22,7 +22,7 @@ void dae::Renderer::Init(SDL_Window * window)
 	ImGui_ImplOpenGL2_Init();
 }
 
-void dae::Renderer::Render()
+void GameEngine::Renderer::Render()
 {
 	SDL_RenderClear(m_Renderer);
 
@@ -44,7 +44,7 @@ void dae::Renderer::Render()
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 	SDL_RenderPresent(m_Renderer);
 }
-void dae::Renderer::RenderCustomImguiUI()
+void GameEngine::Renderer::RenderCustomImguiUI()
 {
 	static bool checkBox = false;
 	static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
@@ -58,7 +58,7 @@ void dae::Renderer::RenderCustomImguiUI()
 	ImGui::PopStyleColor(1);
 	ImGui::End();
 }
-void dae::Renderer::RenderInstructionMenuUI()
+void GameEngine::Renderer::RenderInstructionMenuUI()
 {
 	ImGui::Begin("Instructions");
 
@@ -72,11 +72,11 @@ void dae::Renderer::RenderInstructionMenuUI()
 	
 	ImGui::End();
 }
-void dae::Renderer::RenderImguiDemo()
+void GameEngine::Renderer::RenderImguiDemo()
 {
 	ImGui::ShowDemoWindow(&m_ShowDemo);
 }
-void dae::Renderer::Destroy()
+void GameEngine::Renderer::Destroy()
 {
 	ImGui_ImplOpenGL2_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
@@ -89,7 +89,7 @@ void dae::Renderer::Destroy()
 	}
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
+void GameEngine::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y) const
 {
 	SDL_Rect dst;
 	dst.x = static_cast<int>(x);
@@ -98,7 +98,7 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
+void GameEngine::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height) const
 {
 	SDL_Rect dst;
 	dst.x = static_cast<int>(x);
@@ -108,7 +108,7 @@ void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const
 	SDL_RenderCopy(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst);
 }
 
-int dae::Renderer::GetOpenGLDriverIndex()
+int GameEngine::Renderer::GetOpenGLDriverIndex()
 {
 	auto openglIndex = -1;
 	const auto driverCount = SDL_GetNumRenderDrivers();

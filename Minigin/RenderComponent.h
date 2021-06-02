@@ -1,6 +1,6 @@
 #pragma once
 #include "BaseComponent.h"
-namespace dae
+namespace GameEngine
 {
 	class GameObject;
 	class Texture2D;
