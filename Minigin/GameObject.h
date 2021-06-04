@@ -18,6 +18,8 @@ namespace GameEngine
 
 		void SetPosition(float x, float y);
 
+		Transform GetTransform() { return m_Transform; }
+
 		template <typename T>
 		inline bool AddComponent(std::shared_ptr<T> component)
 		{

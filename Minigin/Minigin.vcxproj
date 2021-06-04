@@ -238,6 +238,7 @@
     <ClInclude Include="FPSComponent.h" />
     <ClInclude Include="GameAudio.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="MoveCommand.h" />
     <ClInclude Include="NullAudio.h" />
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="StatsComponent.h" />
@@ -246,7 +247,6 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="MiniginPCH.h" />
     <ClInclude Include="Observer.h" />
-    <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="SceneObject.h" />
     <ClInclude Include="Renderer.h" />
@@ -317,6 +317,7 @@
     <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="GameAudio.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="MoveCommand.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />
     <ClCompile Include="StatsComponent.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -330,7 +331,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MiniginPCH.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />

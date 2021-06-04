@@ -20,6 +20,12 @@ namespace GameEngine
 		GridComponent& operator=(GridComponent&& other) = delete;
 
 		std::weak_ptr<GameObject> GetGridFromPyramidIndex(int x, int y);
+
+		FVector2 GetGridOffsets() const { return m_offsets; }
+		FVector2 GetStartPos() const { return m_StartPos; }
+		int GetLayers() const { return m_Layers; }
+
+		void NotifyGridblockActivate(IPoint2 pos, int gameMode);
 	private:
 		void ReadGridData(const std::string& gridPath);
 		void MakeGrid();
@@ -27,6 +33,7 @@ namespace GameEngine
 
 		float m_BlockWidth;
 		float m_BlockHeight;
+		FVector2 m_offsets;
 		std::vector<std::string> m_Blockpaths;
 		FVector2 m_StartPos;
 		int m_Layers;

@@ -27,6 +27,7 @@
 #include "SubjectComponent.h"
 #include "StatsComponent.h"
 #include "GridComponent.h"
+#include "PlayerComponent.h"
 #pragma endregion
 
 #pragma region CommandIncludes
@@ -35,6 +36,7 @@
 #include "CatchingSlickAndSamCommand.h"
 #include "endOfStageCommand.h"
 #include "ColorChangeCommand.h"
+#include "MoveCommand.h"
 #pragma endregion
 
 using namespace std;
@@ -78,14 +80,19 @@ void Game::LoadGame() const
 	score->SetPosition(90, 420);
 	scene.Add(score);
 
+	//adding grid
+	auto grid = std::make_shared<GameObject>();
+	grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_lvl1.txt"));
+	scene.Add(grid);
+
 	//Creating the Q*Bert
 	auto QBert = std::make_shared<GameObject>();
-	/*QBert->AddComponent(std::make_shared<RenderComponent>(QBert));
-	QBert->GetComponent<RenderComponent>().lock()->SetTexture("Qbert.png");*/
+	QBert->AddComponent(std::make_shared<RenderComponent>(QBert));
+	QBert->GetComponent<RenderComponent>().lock()->SetTexture("QBertMain.png");
 	QBert->AddComponent(std::make_shared<StatsComponent>(QBert, 3));
 	QBert->AddComponent(std::make_shared<SubjectComponent>(QBert));
+	QBert->AddComponent(std::make_shared<PlayerComponent>(QBert, grid, 3));
 	QBert->GetComponent<SubjectComponent>().lock()->AddObserver(std::make_shared<CharacterObserver>(lives->GetComponent<TextComponent>(), score->GetComponent<TextComponent>()));
-	QBert->SetPosition(50, 150);
 	scene.Add(QBert);
 #pragma endregion QBertInitialize
 
@@ -115,12 +122,10 @@ void Game::LoadGame() const
 	scene.Add(player2);*/
 #pragma endregion Player2Initialize
 
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UP,InputType::released }, std::make_shared<ColorChangeCommand>(QBert));
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWN,InputType::released }, std::make_shared<flyingDiscCoilyCommand>(QBert));
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_LEFT,InputType::released }, std::make_shared<endOfStageCommand>(QBert));
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_RIGHT,InputType::released }, std::make_shared<CatchingSlickAndSamCommand>(QBert));
-
-	InputManager::GetInstance().AddControlInput({ VK_PAD_DPAD_UP,InputType::released }, std::make_shared<Killcommand>(QBert));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released }, std::make_shared<MoveCommand>(QBert,MoveDirection::topleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPRIGHT,InputType::released }, std::make_shared<MoveCommand>(QBert, MoveDirection::topright));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNLEFT,InputType::released }, std::make_shared<MoveCommand>(QBert, MoveDirection::bottomleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNRIGHT,InputType::released }, std::make_shared<MoveCommand>(QBert, MoveDirection::bottomright));
 
 	//InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_UP,InputType::released }, std::make_shared<ColorChangeCommand>(player2));
 	//InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_DOWN,InputType::released }, std::make_shared<flyingDiscCoilyCommand>(player2));
@@ -133,9 +138,4 @@ void Game::LoadGame() const
 	auto t1 = ServiceLocator::getAudio();
 	t1->AddSound("DeathSound", "../Data/Q-bert_Death_Sound.wav");
 	/*t1->Play("DeathSound", 1);*/
-
-	//adding grid
-	auto grid = std::make_shared<GameObject>();
-	grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_lvl1.txt"));
-	scene.Add(grid);
 }

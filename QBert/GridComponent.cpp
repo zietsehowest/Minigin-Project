@@ -28,6 +28,9 @@ GridComponent::GridComponent(std::shared_ptr<GameObject> parent, const std::stri
 	}
 
 	MakeGrid();
+
+	m_offsets.x = m_BlockWidth / 2;
+	m_offsets.y = m_BlockHeight / 2;
 }
 void GridComponent::MakeGrid()
 {
@@ -73,14 +76,18 @@ void GridComponent::generateRows(int rowCount,float startX)
 	}
 	generateRows(++rowCount, startX - m_BlockWidth/2);
 
-	auto go = GetGridFromPyramidIndex(5,6);
-	go.lock()->GetComponent<BlockComponent>().lock()->UpgradeBlock(0);
-	auto blockState = go.lock()->GetComponent<BlockComponent>().lock()->GetBlockState();
-	go.lock()->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[(int)blockState]);
+	
 }
 void GridComponent::Update(float)
 {
 	
+}
+void GridComponent::NotifyGridblockActivate(IPoint2 pos, int gameMode)
+{
+	auto go = GetGridFromPyramidIndex(pos.x, pos.y);
+	go.lock()->GetComponent<BlockComponent>().lock()->UpgradeBlock(gameMode);
+	auto blockState = go.lock()->GetComponent<BlockComponent>().lock()->GetBlockState();
+	go.lock()->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[(int)blockState]);
 }
 std::weak_ptr<GameObject> GridComponent::GetGridFromPyramidIndex(int x, int y)
 {

@@ -175,12 +175,14 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\$(PlatformTarget)\*.dll" "$(O
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Minigin\PlayerComponent.cpp" />
     <ClCompile Include="BlockComponent.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GridComponent.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Minigin\PlayerComponent.h" />
     <ClInclude Include="BlockComponent.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GridComponent.h" />

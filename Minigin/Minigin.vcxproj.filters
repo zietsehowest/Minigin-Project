@@ -102,9 +102,6 @@
     <ClInclude Include="..\3rdParty\imgui-1.81\backends\imgui_impl_sdl.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="Observer.h">
       <Filter>Observer</Filter>
     </ClInclude>
@@ -152,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveCommand.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -224,9 +224,6 @@
     <ClCompile Include="..\3rdParty\imgui-1.81\backends\imgui_impl_sdl.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="CharacterObserver.cpp">
       <Filter>Observer</Filter>
     </ClCompile>
@@ -256,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="ServiceLocator.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveCommand.cpp">
+      <Filter>Commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
