@@ -10,7 +10,10 @@
 using namespace GameEngine;
 GridComponent::GridComponent(std::shared_ptr<GameObject> parent, const std::string& gridFilePath) : BaseComponent(parent)
 {
+
 	ReadGridData(gridFilePath);
+
+	FillVector();
 
 	if (m_Blockpaths.size() == 2)
 	{
@@ -33,11 +36,22 @@ void GridComponent::MakeGrid()
 	gridBlock->AddComponent(std::make_shared<BlockComponent>(gridBlock));
 	gridBlock->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[0]);
 	gridBlock->SetPosition(m_StartPos.x, m_StartPos.y);
-	m_pGridBlocks.push_back(gridBlock);
+	m_pGridBlocks[0][0] = gridBlock;
 	SceneManager::GetInstance().GetCurrentScene().lock()->Add(gridBlock);
 
 	generateRows(1, m_StartPos.x - m_BlockWidth / 2);
 
+}
+void GridComponent::FillVector()
+{
+	for (int i = 0; i < m_Layers; i++)
+	{
+		std::vector<std::shared_ptr<GameObject>> temp;
+		for (int j = 0; j < m_Layers; j++)
+			temp.push_back(nullptr);
+
+		m_pGridBlocks.push_back(temp);
+	}
 }
 void GridComponent::generateRows(int rowCount,float startX)
 {
@@ -45,6 +59,7 @@ void GridComponent::generateRows(int rowCount,float startX)
 		return;
 	float Height = m_StartPos.y + rowCount * m_BlockHeight;
 	float endX = startX + rowCount * m_BlockWidth;
+	int counter = 0;
 	for (float i = startX; i <= endX; i += m_BlockWidth)
 	{
 		auto gridBlock = std::make_shared<GameObject>();
@@ -52,12 +67,13 @@ void GridComponent::generateRows(int rowCount,float startX)
 		gridBlock->AddComponent(std::make_shared<BlockComponent>(gridBlock));
 		gridBlock->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[0]);
 		gridBlock->SetPosition(i, Height);
-		m_pGridBlocks.push_back(gridBlock);
+		m_pGridBlocks[counter][rowCount] = (gridBlock);
 		SceneManager::GetInstance().GetCurrentScene().lock()->Add(gridBlock);
+		counter++;
 	}
 	generateRows(++rowCount, startX - m_BlockWidth/2);
 
-	auto go = GetGridFromPyramidIndex(2,2);
+	auto go = GetGridFromPyramidIndex(5,6);
 	go.lock()->GetComponent<BlockComponent>().lock()->UpgradeBlock(0);
 	auto blockState = go.lock()->GetComponent<BlockComponent>().lock()->GetBlockState();
 	go.lock()->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[(int)blockState]);
@@ -68,10 +84,7 @@ void GridComponent::Update(float)
 }
 std::weak_ptr<GameObject> GridComponent::GetGridFromPyramidIndex(int x, int y)
 {
-	//TODO needs fixing !
-	int tempX = (m_Layers - 1) - x;
-	int index = (x * (x + 1)) + y;
-	return m_pGridBlocks[index-1];
+	return m_pGridBlocks[x][y];
 }
 void GridComponent::ReadGridData(const std::string& gridPath)
 {

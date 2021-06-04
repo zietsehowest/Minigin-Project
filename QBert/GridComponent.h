@@ -23,13 +23,14 @@ namespace GameEngine
 	private:
 		void ReadGridData(const std::string& gridPath);
 		void MakeGrid();
+		void FillVector();
 
 		float m_BlockWidth;
 		float m_BlockHeight;
 		std::vector<std::string> m_Blockpaths;
 		FVector2 m_StartPos;
 		int m_Layers;
-		std::vector<std::shared_ptr<GameObject>> m_pGridBlocks;
+		std::vector<std::vector<std::shared_ptr<GameObject>>> m_pGridBlocks;
 		std::vector<std::shared_ptr<Texture2D>> m_pBlockTextures;
 
 		void generateRows(int rowCount, float startX);
