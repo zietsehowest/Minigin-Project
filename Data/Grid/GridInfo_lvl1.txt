@@ -1,0 +1,7 @@
+bw:60
+bh:47
+pb:../Data/Grid/BlueBlock.png
+sb:../Data/Grid/GreenBlock.png
+bl:7
+x:280
+y:80

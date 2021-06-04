@@ -18,3 +18,8 @@ void GameEngine::RenderComponent::SetTexture(const std::string& filename)
 {
 	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
 }
+
+void GameEngine::RenderComponent::SetTexture(const std::shared_ptr<Texture2D> Image)
+{
+	m_pTexture = Image;
+}

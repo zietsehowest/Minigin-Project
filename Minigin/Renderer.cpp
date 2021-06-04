@@ -38,7 +38,7 @@ void GameEngine::Renderer::Render()
 	else
 		RenderCustomImguiUI();
 
-	RenderInstructionMenuUI();
+	//RenderInstructionMenuUI();
 	
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

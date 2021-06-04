@@ -1,26 +1,35 @@
 #include "MiniginPCH.h"
 #include "SceneManager.h"
 #include "Scene.h"
-
-void GameEngine::SceneManager::Update(float deltaTime)
+using namespace GameEngine;
+void SceneManager::Update(float deltaTime)
 {
-	for(auto& scene : m_Scenes)
-	{
-		scene->Update(deltaTime);
-	}
+	m_CurrentScene->Update(deltaTime);
 }
 
-void GameEngine::SceneManager::Render()
+void SceneManager::Render()
 {
-	for (const auto& scene : m_Scenes)
-	{
-		scene->Render();
-	}
+	m_CurrentScene->Render();
 }
-
-GameEngine::Scene& GameEngine::SceneManager::CreateScene(const std::string& name)
+void SceneManager::SetCurrentScene(const std::string& sceneName)
+{
+	auto it = std::find_if(m_Scenes.begin(), m_Scenes.end(), [sceneName](const std::shared_ptr<Scene>& s1) {return s1.get()->GetName() == sceneName; });
+	if (it != m_Scenes.end())
+	{
+		m_CurrentScene = *it;
+	}
+	else
+		std::cout << "Scene doesn't excist !";
+}
+std::weak_ptr<Scene> SceneManager::GetCurrentScene() const
+{
+	return m_CurrentScene;
+}
+Scene& SceneManager::CreateScene(const std::string& name)
 {
 	const auto scene = std::shared_ptr<Scene>(new Scene(name));
 	m_Scenes.push_back(scene);
+	if (m_CurrentScene == nullptr)
+		m_CurrentScene = scene;
 	return *scene;
 }

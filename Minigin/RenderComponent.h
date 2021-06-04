@@ -11,6 +11,7 @@ namespace GameEngine
 		virtual void Render(const Transform& transform) const override;
 
 		void SetTexture(const std::string& filename);
+		void SetTexture(const std::shared_ptr<Texture2D> Image);
 
 		RenderComponent(std::shared_ptr<GameObject> parent);
 		virtual ~RenderComponent();

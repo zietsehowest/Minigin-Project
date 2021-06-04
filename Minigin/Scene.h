@@ -14,6 +14,8 @@ namespace GameEngine
 		void Update(float deltaTime);
 		void Render() const;
 
+		const std::string& GetName() const { return m_Name; }
+
 		~Scene();
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;
