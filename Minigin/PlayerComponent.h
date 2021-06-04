@@ -7,7 +7,7 @@ namespace GameEngine
 	class PlayerComponent : public BaseComponent
 	{
 	public:
-		virtual void Update(float) override;
+		virtual void Update(float elapsedSec) override;
 		virtual void Render(const Transform&) const {};
 
 		void Kill();
@@ -25,6 +25,8 @@ namespace GameEngine
 		int m_Lives;
 		IPoint2 m_CurrentPos;
 		std::weak_ptr<GameObject> m_pGrid;
+		float m_moveCooldown;
+		float m_maxMoveCooldown;
 	};
 }
 

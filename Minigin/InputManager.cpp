@@ -16,7 +16,7 @@ bool GameEngine::InputManager::ProcessInput()
 	{
 		for (std::pair<KeyInput, std::shared_ptr<Command>> comm : m_ControlCommands)
 		{
-			if (comm.first.controllerKey == m_KeyStroke.VirtualKey) //first check wheter the key that is pressed is linked to a command
+			if (comm.first.InputKey == m_KeyStroke.VirtualKey) //first check wheter the key that is pressed is linked to a command
 			{
 				switch (comm.first.inputType) //check what input type is linked with this key
 				{
@@ -36,25 +36,34 @@ bool GameEngine::InputManager::ProcessInput()
 			}
 		}
 	}
-
-
-	return ProcessKeyBoardInput();
-}
-bool GameEngine::InputManager::ProcessKeyBoardInput()
-{
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
 	{
-		if (e.type == SDL_QUIT)
-			return false;
-		if (e.type == SDL_KEYUP) //SDL Key test
+		for (std::pair<KeyInput, std::shared_ptr<Command>> comm : m_ControlCommands)
 		{
-			if (e.key.keysym.scancode == SDL_SCANCODE_A)
+			if (comm.first.IsKeyBoardInput)
 			{
-				std::cout << "Test Pressing A";
-				return true;
+				if (comm.first.InputKey == e.key.keysym.sym)
+				{
+					switch (comm.first.inputType)
+					{
+					case InputType::released:
+						if (e.type & SDL_KEYUP)
+							comm.second->Execute();
+						break;
+					case InputType::pressed:
+						if (e.type & SDL_KEYDOWN)
+							comm.second->Execute();
+						break;
+					case InputType::hold:
+						//is there a event for hold ?
+						break;
+					}
+				}
 			}
 		}
+		if (e.type == SDL_QUIT)
+			return false;
 	}
 	return true;
 }

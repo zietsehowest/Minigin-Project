@@ -122,11 +122,16 @@ void Game::LoadGame() const
 	scene.Add(player2);*/
 #pragma endregion Player2Initialize
 
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released }, std::make_shared<MoveCommand>(QBert,MoveDirection::topleft));
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPRIGHT,InputType::released }, std::make_shared<MoveCommand>(QBert, MoveDirection::topright));
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNLEFT,InputType::released }, std::make_shared<MoveCommand>(QBert, MoveDirection::bottomleft));
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNRIGHT,InputType::released }, std::make_shared<MoveCommand>(QBert, MoveDirection::bottomright));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released,false}, std::make_shared<MoveCommand>(QBert,MoveDirection::topleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPRIGHT,InputType::released,false}, std::make_shared<MoveCommand>(QBert, MoveDirection::topright));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNLEFT,InputType::released,false}, std::make_shared<MoveCommand>(QBert, MoveDirection::bottomleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNRIGHT,InputType::released,false}, std::make_shared<MoveCommand>(QBert, MoveDirection::bottomright));
 
+
+	InputManager::GetInstance().AddControlInput({ SDLK_q,InputType::released,true }, std::make_shared<MoveCommand>(QBert, MoveDirection::topleft));
+	InputManager::GetInstance().AddControlInput({ SDLK_e,InputType::released,true }, std::make_shared<MoveCommand>(QBert, MoveDirection::topright));
+	InputManager::GetInstance().AddControlInput({ SDLK_a,InputType::released,true }, std::make_shared<MoveCommand>(QBert, MoveDirection::bottomleft));
+	InputManager::GetInstance().AddControlInput({ SDLK_d,InputType::released,true }, std::make_shared<MoveCommand>(QBert, MoveDirection::bottomright));
 	//InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_UP,InputType::released }, std::make_shared<ColorChangeCommand>(player2));
 	//InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_DOWN,InputType::released }, std::make_shared<flyingDiscCoilyCommand>(player2));
 	//InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_LEFT,InputType::released }, std::make_shared<endOfStageCommand>(player2));

@@ -19,26 +19,28 @@ namespace GameEngine
 	{
 		bool operator < (const KeyInput& temp) const
 		{
-			return controllerKey < temp.controllerKey;
+			return InputKey < temp.InputKey;
 		}
 		bool operator > (const KeyInput& temp) const
 		{
-			return controllerKey > temp.controllerKey;
+			return InputKey > temp.InputKey;
 		}
 		bool operator == (const KeyInput& temp) const
 		{
-			return controllerKey == temp.controllerKey && inputType == temp.inputType;
+			return InputKey == temp.InputKey && inputType == temp.inputType;
 		}
-		int controllerKey;
+		int InputKey;
 		InputType inputType;
+		bool IsKeyBoardInput;
 	};
 	class InputManager final : public Singleton<InputManager>
 	{
 	public:
 		bool ProcessInput();
+		
 		void AddControlInput(KeyInput key, const std::shared_ptr<Command>& command);
+		
 		bool IsKeyPressed(int keyId) const;
-		bool ProcessKeyBoardInput();
 	private:
 		XINPUT_KEYSTROKE m_KeyStroke{};
 
