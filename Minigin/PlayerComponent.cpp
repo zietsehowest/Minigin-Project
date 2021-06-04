@@ -67,7 +67,7 @@ void PlayerComponent::Move(const IPoint2& moveDirection)
 		
 		glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 		m_pParent.lock()->SetPosition(newPos.x,newPos.y - tempGrid.lock()->GetGridOffsets().y);
-		tempGrid.lock()->NotifyGridblockActivate(m_CurrentPos, 0);
+		tempGrid.lock()->NotifyGridblockToggle(m_CurrentPos, 0,1);
 
 		m_moveCooldown = m_maxMoveCooldown;
 	}

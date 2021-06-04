@@ -1,6 +1,5 @@
 #pragma once
 #include "Singleton.h"
-
 namespace GameEngine
 {
 	class Scene;

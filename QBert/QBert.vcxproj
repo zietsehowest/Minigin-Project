@@ -177,15 +177,21 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\$(PlatformTarget)\*.dll" "$(O
   <ItemGroup>
     <ClCompile Include="..\Minigin\PlayerComponent.cpp" />
     <ClCompile Include="BlockComponent.cpp" />
+    <ClCompile Include="CoilyComponent.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GreenCreatureComponent.cpp" />
     <ClCompile Include="GridComponent.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PurpleCreatureComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Minigin\PlayerComponent.h" />
     <ClInclude Include="BlockComponent.h" />
+    <ClInclude Include="CoilyComponent.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GreenCreatureComponent.h" />
     <ClInclude Include="GridComponent.h" />
+    <ClInclude Include="PurpleCreatureComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

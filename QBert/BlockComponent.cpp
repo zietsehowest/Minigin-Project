@@ -20,7 +20,7 @@ void BlockComponent::UpgradeBlock(int gamemode)
 }
 void BlockComponent::DownGradeBlock()
 {
-	if (m_CurrentState == BlockState::state2)
+	if (m_CurrentState == BlockState::state2 || m_CurrentState == BlockState::state3)
 		m_CurrentState = BlockState::state1;
 }
 void BlockComponent::Update(float)

@@ -82,10 +82,11 @@ void GridComponent::Update(float)
 {
 	
 }
-void GridComponent::NotifyGridblockActivate(IPoint2 pos, int gameMode)
+void GridComponent::NotifyGridblockToggle(IPoint2 pos, int gameMode, int deactivateOrActivate)
 {
 	auto go = GetGridFromPyramidIndex(pos.x, pos.y);
-	go.lock()->GetComponent<BlockComponent>().lock()->UpgradeBlock(gameMode);
+	auto tempBlock = go.lock()->GetComponent<BlockComponent>().lock();
+	deactivateOrActivate == 1 ? tempBlock->UpgradeBlock(gameMode) : tempBlock->DownGradeBlock();
 	auto blockState = go.lock()->GetComponent<BlockComponent>().lock()->GetBlockState();
 	go.lock()->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[(int)blockState]);
 }

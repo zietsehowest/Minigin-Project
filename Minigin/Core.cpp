@@ -11,6 +11,7 @@ using namespace std::chrono;
 using namespace GameEngine;
 void GameEngine::Core::Initialize()
 {
+	srand((int)time(nullptr));
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) 
 	{

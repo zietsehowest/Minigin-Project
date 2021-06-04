@@ -33,6 +33,15 @@
     <ClCompile Include="..\Minigin\PlayerComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="CoilyComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PurpleCreatureComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GreenCreatureComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -45,6 +54,15 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Minigin\PlayerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CoilyComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PurpleCreatureComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GreenCreatureComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,9 +14,10 @@ namespace GameEngine
 	{
 		int x;
 		int y;
+
+		bool operator==(const IPoint2& rhs)
+		{
+			return (x == rhs.x) && (y == rhs.y);
+		}
 	};
-	/*IPoint2 operator+(const IPoint2& p1, const IPoint2& p2)
-	{
-		return IPoint2{ p1.x + p2.x,p1.y + p2.y };
-	}*/
 }

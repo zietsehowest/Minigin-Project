@@ -25,7 +25,7 @@ namespace GameEngine
 		FVector2 GetStartPos() const { return m_StartPos; }
 		int GetLayers() const { return m_Layers; }
 
-		void NotifyGridblockActivate(IPoint2 pos, int gameMode);
+		void NotifyGridblockToggle(IPoint2 pos, int gameMode,int deactivateOrActivate);
 	private:
 		void ReadGridData(const std::string& gridPath);
 		void MakeGrid();

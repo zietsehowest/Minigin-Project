@@ -14,6 +14,8 @@ namespace GameEngine
 
 		void Move(const IPoint2& moveDirection);
 
+		IPoint2 GetCurrentGridPos() const { return m_CurrentPos; }
+
 		PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_ptr<GameObject> grid,int lives = 0);
 		virtual ~PlayerComponent();
 		PlayerComponent(const PlayerComponent& other) = delete;
