@@ -178,6 +178,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\$(PlatformTarget)\*.dll" "$(O
     <ClCompile Include="..\Minigin\PlayerComponent.cpp" />
     <ClCompile Include="BlockComponent.cpp" />
     <ClCompile Include="CoilyComponent.cpp" />
+    <ClCompile Include="DiskComponent.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GreenCreatureComponent.cpp" />
     <ClCompile Include="GridComponent.cpp" />
@@ -188,6 +189,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_mixer-2.0.4\lib\$(PlatformTarget)\*.dll" "$(O
     <ClInclude Include="..\Minigin\PlayerComponent.h" />
     <ClInclude Include="BlockComponent.h" />
     <ClInclude Include="CoilyComponent.h" />
+    <ClInclude Include="DiskComponent.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GreenCreatureComponent.h" />
     <ClInclude Include="GridComponent.h" />

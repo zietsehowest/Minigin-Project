@@ -3,6 +3,7 @@
 #include "BaseComponent.h"
 #include "GameObject.h"
 #include "Texture2D.h"
+#include <map>
 namespace GameEngine
 {
 	class GridComponent : public BaseComponent
@@ -25,7 +26,9 @@ namespace GameEngine
 		FVector2 GetStartPos() const { return m_StartPos; }
 		int GetLayers() const { return m_Layers; }
 
-		void NotifyGridblockToggle(IPoint2 pos, int gameMode,int deactivateOrActivate);
+		bool NotifyGridblockToggle(IPoint2 pos, int gameMode,int deactivateOrActivate);
+
+		std::weak_ptr<GameObject> checkForDisk(int lineHeight, int leftOrRight);
 	private:
 		void ReadGridData(const std::string& gridPath);
 		void MakeGrid();
@@ -38,6 +41,7 @@ namespace GameEngine
 		FVector2 m_StartPos;
 		int m_Layers;
 		std::vector<std::vector<std::shared_ptr<GameObject>>> m_pGridBlocks;
+		std::vector<std::shared_ptr<GameObject>> m_pDisks;
 		std::vector<std::shared_ptr<Texture2D>> m_pBlockTextures;
 
 		void generateRows(int rowCount, float startX);

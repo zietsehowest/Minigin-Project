@@ -14,7 +14,7 @@ void GameEngine::StatsComponent::Attack()
 		m_pParent.lock()->GetComponent<SubjectComponent>().lock()->Notify(m_pParent, EVENT_PLAYER_DEATH);
 	if (m_Lives <= 0)
 	{
-		m_pParent.lock()->SetIsActive(false);
+		//bring game back to main menu or close game
 	}
 }
 void GameEngine::StatsComponent::ChangeScore(int points)

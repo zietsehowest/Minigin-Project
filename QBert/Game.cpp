@@ -54,33 +54,21 @@ void Game::LoadGame() const
 	go->GetComponent<RenderComponent>().lock()->SetTexture("background.jpg");
 	scene.Add(go);
 
-	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	/*go = std::make_shared<GameObject>();
-	go->AddComponent(std::make_shared<TextComponent>(go));
-	go->GetComponent<TextComponent>().lock()->SetText("Programming 4 Assignment", font, SDL_Color{ 255,255,255 });
-	go->SetPosition(90, 30);
-	scene.Add(go);*/
-
-
-	go = std::make_shared<GameObject>();
-	go->AddComponent(std::make_shared<FPSComponent>(go));
-	go->GetComponent<FPSComponent>().lock()->SetText("60", font, SDL_Color{ 255,0,0 });
-	go->SetPosition(20, 20);
-	scene.Add(go);
+	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 25);
 
 #pragma region QBert
 	//lives display
 	auto lives = std::make_shared<GameObject>();
 	lives->AddComponent(std::make_shared<TextComponent>(lives));
-	lives->GetComponent<TextComponent>().lock()->SetText("Lives: 3", font, SDL_Color{ 0,0,255 });
-	lives->SetPosition(90, 370);
+	lives->GetComponent<TextComponent>().lock()->SetText("Lives: 3", font, SDL_Color{ 255,140,0 });
+	lives->SetPosition(30, 30);
 	scene.Add(lives);
 
 	//score display
 	auto score = std::make_shared<GameObject>();
 	score->AddComponent(std::make_shared<TextComponent>(score));
-	score->GetComponent<TextComponent>().lock()->SetText("Score: 0", font, SDL_Color{ 0,0,255 });
-	score->SetPosition(90, 420);
+	score->GetComponent<TextComponent>().lock()->SetText("Score: 0", font, SDL_Color{ 255,140,0 });
+	score->SetPosition(30, 70);
 	scene.Add(score);
 
 	//adding grid
@@ -94,7 +82,7 @@ void Game::LoadGame() const
 	QBert->GetComponent<RenderComponent>().lock()->SetTexture("QBertMain.png");
 	QBert->AddComponent(std::make_shared<StatsComponent>(QBert, 3));
 	QBert->AddComponent(std::make_shared<SubjectComponent>(QBert));
-	QBert->AddComponent(std::make_shared<PlayerComponent>(QBert, grid, 3));
+	QBert->AddComponent(std::make_shared<PlayerComponent>(QBert, grid));
 	QBert->GetComponent<SubjectComponent>().lock()->AddObserver(std::make_shared<CharacterObserver>(lives->GetComponent<TextComponent>(), score->GetComponent<TextComponent>()));
 	scene.Add(QBert);
 
@@ -138,16 +126,7 @@ void Game::LoadGame() const
 	score2->GetComponent<TextComponent>().lock()->SetText("Score: 0", font, SDL_Color{ 255,0,0 });
 	score2->SetPosition(430, 420);
 	scene.Add(score2);
-
-	Creating the Player 2
-	auto player2 = std::make_shared<GameObject>();
-	player2->AddComponent(std::make_shared<RenderComponent>(player2));
-	player2->GetComponent<RenderComponent>().lock()->SetTexture("Coily.png");
-	player2->AddComponent(std::make_shared<StatsComponent>(player2, 3));
-	player2->AddComponent(std::make_shared<SubjectComponent>(player2));
-	player2->GetComponent<SubjectComponent>().lock()->AddObserver(std::make_shared<CharacterObserver>(lives2->GetComponent<TextComponent>(), score2->GetComponent<TextComponent>()));
-	player2->SetPosition(400, 200);
-	scene.Add(player2);*/
+*/
 #pragma endregion Player2Initialize
 
 	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released,false}, std::make_shared<MoveCommand>(QBert,MoveDirection::topleft));
@@ -167,8 +146,8 @@ void Game::LoadGame() const
 
 	//InputManager::GetInstance().AddControlInput({ VK_PAD_A,InputType::released }, std::make_shared<Killcommand>(player2));
 
-	ServiceLocator::provide(new AudioLogger(new GameAudio()));
+	/*ServiceLocator::provide(new AudioLogger(new GameAudio()));
 	auto t1 = ServiceLocator::getAudio();
 	t1->AddSound("DeathSound", "../Data/Q-bert_Death_Sound.wav");
-	/*t1->Play("DeathSound", 1);*/
+	t1->Play("DeathSound", 1);*/
 }

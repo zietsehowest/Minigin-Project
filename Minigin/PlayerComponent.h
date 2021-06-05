@@ -16,7 +16,9 @@ namespace GameEngine
 
 		IPoint2 GetCurrentGridPos() const { return m_CurrentPos; }
 
-		PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_ptr<GameObject> grid,int lives = 0);
+		void ResetPosition();
+
+		PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_ptr<GameObject> grid);
 		virtual ~PlayerComponent();
 		PlayerComponent(const PlayerComponent& other) = delete;
 		PlayerComponent(PlayerComponent&& other) = delete;
@@ -24,7 +26,6 @@ namespace GameEngine
 		PlayerComponent& operator=(PlayerComponent&& other) = delete;
 	
 	private:
-		int m_Lives;
 		IPoint2 m_CurrentPos;
 		std::weak_ptr<GameObject> m_pGrid;
 		float m_moveCooldown;
