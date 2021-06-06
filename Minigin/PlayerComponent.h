@@ -15,10 +15,13 @@ namespace GameEngine
 		void Move(const IPoint2& moveDirection);
 
 		IPoint2 GetCurrentGridPos() const { return m_CurrentPos; }
+		bool IsOnDisk() const { return m_IsOnDisk; }
 
 		void ResetPosition();
 
 		void MoveTopPosition();
+
+		void ToggleIsOnDisk();
 
 		PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_ptr<GameObject> grid,int playerId=0);
 		virtual ~PlayerComponent();
@@ -33,6 +36,7 @@ namespace GameEngine
 		float m_moveCooldown;
 		float m_maxMoveCooldown;
 		int m_PlayerId;
+		bool m_IsOnDisk;
 	};
 }
 

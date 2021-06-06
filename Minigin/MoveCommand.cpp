@@ -2,12 +2,13 @@
 #include "MoveCommand.h"
 #include "GameObject.h"
 #include "PlayerComponent.h"
+#include "../QBert/CoilyComponent.h"
 using namespace GameEngine;
 void MoveCommand::MovePlayer()
 {
-	if (!m_Target.expired() && !m_Target.lock()->GetComponent<PlayerComponent>().expired())
+	if (!m_Target.expired() && (!m_Target.lock()->GetComponent<PlayerComponent>().expired() || !m_Target.lock()->GetComponent<CoilyComponent>().expired()))
 	{
-		IPoint2 temp;
+		IPoint2 temp{};
 		switch (m_CommandDirection)
 		{
 		case MoveDirection::topleft:
@@ -23,6 +24,9 @@ void MoveCommand::MovePlayer()
 			temp = { 1,1 };
 			break;
 		}
-		m_Target.lock()->GetComponent<PlayerComponent>().lock()->Move(temp);
+		if (m_IsPlayer)
+			m_Target.lock()->GetComponent<PlayerComponent>().lock()->Move(temp);
+		else if(!m_IsPlayer)
+			m_Target.lock()->GetComponent<CoilyComponent>().lock()->Move(true, temp);
 	}
 }

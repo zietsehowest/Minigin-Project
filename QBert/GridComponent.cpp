@@ -142,7 +142,9 @@ std::weak_ptr<GameObject> GridComponent::checkForDisk(int lineHeight, int leftOr
 {
 		auto it = std::find_if(m_pDisks.begin(), m_pDisks.end(), [lineHeight, leftOrRight](std::shared_ptr<GameObject> ob)
 		{
-			auto coordinates = ob.get()->GetComponent<DiskComponent>().lock()->GetDiskCoordinates();
+			if(ob->GetComponent<DiskComponent>().lock()->IsDiskActivated()) //check if disk is already used
+				return false;
+			auto coordinates = ob->GetComponent<DiskComponent>().lock()->GetDiskCoordinates();
 			return (coordinates.x == lineHeight && coordinates.y == leftOrRight);
 		});
 		if (it != m_pDisks.end()) //we have a disk here
@@ -166,7 +168,7 @@ bool GridComponent::HasClearedLevel()
 		}
 	}
 
-	clearGrid();
+	//clearGrid(); clearing the level
 	return true;
 }
 void GridComponent::clearGrid()

@@ -14,6 +14,7 @@ PlayerComponent::PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_pt
 	,m_CurrentPos{0,0}
 	,m_maxMoveCooldown{0.4f}
 	,m_PlayerId{playerId}
+	,m_IsOnDisk{false}
 {
 	ResetPosition();
 
@@ -69,9 +70,13 @@ void PlayerComponent::MoveTopPosition()
 	glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 	m_pParent.lock()->SetPosition(newPos.x, newPos.y - tempGrid.lock()->GetGridOffsets().y);
 }
+void PlayerComponent::ToggleIsOnDisk()
+{
+	m_IsOnDisk = !m_IsOnDisk;
+}
 void PlayerComponent::Move(const IPoint2& moveDirection)
 {
-	if (m_moveCooldown > 0.f)
+	if (m_moveCooldown > 0.f || m_IsOnDisk)
 		return;
 
 	std::cout << moveDirection.x << " , " << moveDirection.y << std::endl;
@@ -85,13 +90,16 @@ void PlayerComponent::Move(const IPoint2& moveDirection)
 
 		if (m_CurrentPos.x < 0 || m_CurrentPos.y < 0 || m_CurrentPos.y > layers) //player kills himself by walking of the array
 		{
-			auto tempLeftDisk = tempGrid.lock()->checkForDisk(m_CurrentPos.y+1, -1);
+			auto tempLeftDisk = tempGrid.lock()->checkForDisk(m_CurrentPos.y+1, -1); //jump on disk and remove disk
 			if (!tempLeftDisk.expired())
 			{
 				tempLeftDisk.lock()->GetComponent<DiskComponent>().lock()->ActivateDisk(m_pParent);
 				m_moveCooldown = m_maxMoveCooldown;
+
+				m_CurrentPos.x -= moveDirection.x;
+				m_CurrentPos.y -= moveDirection.y;
+				
 				return;
-				//check if coily is close so yes kill coily and add points
 			}
 			else
 			{
@@ -106,6 +114,10 @@ void PlayerComponent::Move(const IPoint2& moveDirection)
 			{
 				tempRightDisk.lock()->GetComponent<DiskComponent>().lock()->ActivateDisk(m_pParent);
 				m_moveCooldown = m_maxMoveCooldown;
+				
+				m_CurrentPos.x -= moveDirection.x;
+				m_CurrentPos.y -= moveDirection.y;
+				
 				return;
 				//check if coily is close so yes kill coily and add points
 			}

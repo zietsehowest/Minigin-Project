@@ -29,6 +29,8 @@ namespace GameEngine
 		Gamemode GetGameMode() const { return m_Gamemode; }
 		GameLevel GetGameLevel() const { return m_Level; }
 
+		void SetGameLevel(GameLevel level) { m_Level = level; }
+
 		bool NotifyGridblockToggle(IPoint2 pos, int gameMode,int deactivateOrActivate);
 
 		std::weak_ptr<GameObject> checkForDisk(int lineHeight, int leftOrRight);

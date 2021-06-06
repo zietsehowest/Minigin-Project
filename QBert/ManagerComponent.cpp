@@ -46,16 +46,18 @@
 using namespace GameEngine;
 ManagerComponent::ManagerComponent(std::shared_ptr<GameObject> parent, Gamemode mode) : BaseComponent(parent)
 	,m_CurrentGamemode{mode}
-	,m_CurrentLevel{GameLevel::lvl1}
+	,m_CurrentLevel{GameLevel::lvl2}
 	,m_HasCompletedLevel{false}
 {
 	switch (mode)
 	{
 	case Gamemode::singleplayer:
 		InitializeSinglePlayer();
+		SpawnEnemy(EnemyType::Coily);
 		break;
 	case Gamemode::coop:
 		InitializeCoop();
+		SpawnEnemy(EnemyType::Coily);
 		break;
 	case Gamemode::versus:
 		InitializeVersus();
@@ -63,16 +65,17 @@ ManagerComponent::ManagerComponent(std::shared_ptr<GameObject> parent, Gamemode 
 	}
 
 	SpawnEnemy(EnemyType::GreenEnemy);
-	SpawnEnemy(EnemyType::Coily);
+		
 }
 void ManagerComponent::Update(float elapsedSec)
 {
 	if (m_HasCompletedLevel)
 	{
-		auto grid = std::make_shared<GameObject>();
+		/*auto grid = std::make_shared<GameObject>();
 		grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_"+ std::to_string((int)m_CurrentLevel) + ".txt", m_CurrentGamemode, m_CurrentLevel));
 		m_pGrid = grid;
 		m_HasCompletedLevel = false;
+		SceneManager::GetInstance().GetCurrentScene().lock()->Add(m_pGrid.lock());*/
 	}
 
 	RemoveInactiveEnemies();
@@ -83,7 +86,7 @@ void ManagerComponent::Update(float elapsedSec)
 	{
 		m_HasCompletedLevel = true;
 		RemoveAllEnemies();
-		m_CurrentLevel = GameLevel((int)m_CurrentLevel+1);
+		//reset level
 	}
 }
 void ManagerComponent::InitializeSinglePlayer()
@@ -219,8 +222,59 @@ void ManagerComponent::InitializeCoop()
 }
 void ManagerComponent::InitializeVersus()
 {
+	auto scene = SceneManager::GetInstance().GetCurrentScene().lock();
 
+	auto go = std::make_shared<GameObject>();
+	go->AddComponent<RenderComponent>(std::make_shared<RenderComponent>(go));
+	go->GetComponent<RenderComponent>().lock()->SetTexture("background.jpg");
+	scene->Add(go);
+
+	auto font = ResourceManager::GetInstance().LoadFont("Lingua.otf", 25);
+
+#pragma region InitializeQBert
+	//lives display
+	auto lives = std::make_shared<GameObject>();
+	lives->AddComponent(std::make_shared<TextComponent>(lives));
+	lives->GetComponent<TextComponent>().lock()->SetText("Lives: 3", font, SDL_Color{ 255,140,0 });
+	lives->SetPosition(20, 30);
+	scene->Add(lives);
+
+	//score display
+	auto score = std::make_shared<GameObject>();
+	score->AddComponent(std::make_shared<TextComponent>(score));
+	score->GetComponent<TextComponent>().lock()->SetText("Score: 0", font, SDL_Color{ 255,140,0 });
+	score->SetPosition(20, 50);
+	scene->Add(score);
+
+	//adding grid
+	auto grid = std::make_shared<GameObject>();
+	grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_" + std::to_string((int)m_CurrentLevel) + ".txt", m_CurrentGamemode, m_CurrentLevel));
+	scene->Add(grid);
+
+	m_pGrid = grid;
+
+	//Creating the Q*Bert
+	auto qbert = std::make_shared<GameObject>();
+	qbert->AddComponent(std::make_shared<RenderComponent>(qbert));
+	qbert->GetComponent<RenderComponent>().lock()->SetTexture("QBertMain.png");
+	qbert->AddComponent(std::make_shared<StatsComponent>(qbert, 3));
+	qbert->AddComponent(std::make_shared<SubjectComponent>(qbert));
+	qbert->AddComponent(std::make_shared<PlayerComponent>(qbert, grid));
+	qbert->GetComponent<SubjectComponent>().lock()->AddObserver(std::make_shared<CharacterObserver>(lives->GetComponent<TextComponent>(), score->GetComponent<TextComponent>()));
+	scene->Add(qbert);
+	m_Players.push_back(qbert);
+
+#pragma endregion
+
+#pragma region InitializeCoily
+	SpawnEnemy(EnemyType::CoilyPlayer);
+#pragma endregion
+	InputManager::GetInstance().AddControlInput({ SDLK_q,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::topleft));
+	InputManager::GetInstance().AddControlInput({ SDLK_e,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::topright));
+	InputManager::GetInstance().AddControlInput({ SDLK_a,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomleft));
+	InputManager::GetInstance().AddControlInput({ SDLK_d,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomright));
 }
+
 void ManagerComponent::SpawnEnemy(EnemyType type)
 {
 	auto scene = SceneManager::GetInstance().GetCurrentScene();
@@ -246,8 +300,21 @@ void ManagerComponent::SpawnEnemy(EnemyType type)
 		scene.lock()->Add(creature);
 		m_Enemies.push_back(creature);
 		break;
+	case EnemyType::CoilyPlayer:
+		creature->AddComponent(std::make_shared<RenderComponent>(creature));
+		creature->GetComponent<RenderComponent>().lock()->SetTexture("Coily1.png");
+		creature->AddComponent(std::make_shared<CoilyComponent>(creature, m_Players[0], m_pGrid, "Coily2.png",false));
+		scene.lock()->Add(creature);
+		m_Enemies.push_back(creature);
+
+		InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::topleft, false));
+		InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::topright, false));
+		InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNLEFT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::bottomleft, false));
+		InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::bottomright, false));
+		break;
 	}
 }
+
 void ManagerComponent::HandleEnemyCollisions()
 {
 	for (auto enemy : m_Enemies)
@@ -269,7 +336,9 @@ void ManagerComponent::HandleEnemyCollisions()
 			{
 				auto playerPos = player->GetComponent<PlayerComponent>().lock()->GetCurrentGridPos();
 				auto enemyPos = enemy.lock()->GetComponent<PurpleCreatureComponent>().lock()->GetCurrentGridPos();
-				if (playerPos == enemyPos)
+
+				auto IsOnDisk = player->GetComponent<PlayerComponent>().lock()->IsOnDisk();
+				if (playerPos == enemyPos && !IsOnDisk)
 				{
 					player->GetComponent<PlayerComponent>().lock()->Kill(); //clear all enemies
 					RemoveAllEnemies();
@@ -280,7 +349,9 @@ void ManagerComponent::HandleEnemyCollisions()
 			{
 				auto playerPos = player->GetComponent<PlayerComponent>().lock()->GetCurrentGridPos();
 				auto enemyPos = enemy.lock()->GetComponent<CoilyComponent>().lock()->GetCurrentGridPos();
-				if (playerPos == enemyPos)
+
+				auto IsOnDisk = player->GetComponent<PlayerComponent>().lock()->IsOnDisk();
+				if (playerPos == enemyPos && !IsOnDisk)
 				{
 					player->GetComponent<PlayerComponent>().lock()->Kill(); //clear all enemies
 					RemoveAllEnemies();

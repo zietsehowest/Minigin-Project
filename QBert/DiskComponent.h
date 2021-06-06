@@ -21,6 +21,8 @@ namespace GameEngine
 		IPoint2 GetDiskCoordinates() { return m_Position; }
 
 		void ActivateDisk(std::weak_ptr<GameObject> m_QBert);
+
+		bool IsDiskActivated() { return m_IsDiskActivated; }
 	private:
 		IPoint2 m_Position;
 		std::weak_ptr<GameObject> m_Qbert;

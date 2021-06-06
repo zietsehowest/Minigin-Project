@@ -10,7 +10,7 @@ namespace GameEngine
 		singleplayer,coop,versus
 	};
 	enum class EnemyType {
-		purpleEnemy,GreenEnemy,Coily
+		purpleEnemy,GreenEnemy,Coily,CoilyPlayer
 	};
 	class ManagerComponent : public BaseComponent
 	{
@@ -32,6 +32,7 @@ namespace GameEngine
 		Gamemode m_CurrentGamemode;
 		GameLevel m_CurrentLevel;
 		bool m_HasCompletedLevel;
+		bool m_testSpawn =true;
 
 		void InitializeSinglePlayer();
 		void InitializeCoop();
@@ -43,6 +44,8 @@ namespace GameEngine
 		void RemoveAllEnemies();
 
 		void SpawnEnemy(EnemyType type);
+
+
 
 	};
 }

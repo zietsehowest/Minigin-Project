@@ -52,32 +52,6 @@ void Game::LoadGame() const
 
 	auto go = std::make_shared<GameObject>();
 
-	go->AddComponent<>(std::make_shared<ManagerComponent>(go, Gamemode::singleplayer));
+	go->AddComponent<>(std::make_shared<ManagerComponent>(go, Gamemode::versus));
 	scene.Add(go);
-
-	////Adding test Coily
-	//auto Coily = std::make_shared<GameObject>();
-	//Coily->AddComponent(std::make_shared<RenderComponent>(Coily));
-	//Coily->GetComponent<RenderComponent>().lock()->SetTexture("Coily1.png");
-	//Coily->AddComponent(std::make_shared<CoilyComponent>(Coily,QBert,grid,"Coily2.png"));
-	//scene.Add(Coily);
-
-	////Adding test ugg and wrongway
-	//auto wrongway = std::make_shared<GameObject>();
-	//wrongway->AddComponent(std::make_shared<RenderComponent>(wrongway));
-	//wrongway->AddComponent(std::make_shared<PurpleCreatureComponent>(wrongway, grid,EnemyType::wrongway,std::vector<std::string>{"WrongWay.png","Ugg.png"}));
-	//scene.Add(wrongway);
-
-	//auto ugg = std::make_shared<GameObject>();
-	//ugg->AddComponent(std::make_shared<RenderComponent>(ugg));
-	//ugg->AddComponent(std::make_shared<PurpleCreatureComponent>(ugg, grid, EnemyType::ugg, std::vector<std::string>{"WrongWay.png", "Ugg.png"}));
-	//scene.Add(ugg);
-
-	////Adding test to slick and sam
-	//auto creature = std::make_shared<GameObject>();
-	//creature->AddComponent(std::make_shared<RenderComponent>(creature));
-	//creature->AddComponent(std::make_shared<GreenCreatureComponent>(creature, grid, std::vector<std::string>{"Sam.png","Slick.png"}));
-	//scene.Add(creature);
-
-
 }

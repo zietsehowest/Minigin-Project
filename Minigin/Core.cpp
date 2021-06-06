@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include <SDL.h>
+#include <vld.h>
 using namespace std;
 using namespace std::chrono;
 using namespace GameEngine;

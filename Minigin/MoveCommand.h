@@ -12,9 +12,10 @@ namespace GameEngine
 	class MoveCommand final : public Command
 	{
 	public:
-		MoveCommand(std::weak_ptr<GameObject> target, const MoveDirection& direction)
+		MoveCommand(std::weak_ptr<GameObject> target, const MoveDirection& direction,bool IsPlayer = true)
 			:m_Target{ target }
 			,m_CommandDirection{direction}
+			, m_IsPlayer{ IsPlayer }
 		{
 		}
 		virtual void Execute() { MovePlayer(); }
@@ -22,6 +23,7 @@ namespace GameEngine
 		void MovePlayer();
 		MoveDirection m_CommandDirection;
 		std::weak_ptr<GameObject> m_Target;
+		bool m_IsPlayer;
 	};
 }
 
