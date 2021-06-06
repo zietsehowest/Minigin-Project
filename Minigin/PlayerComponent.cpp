@@ -9,15 +9,13 @@
 #include "../QBert/DiskComponent.h"
 using namespace GameEngine;
 PlayerComponent::~PlayerComponent() {};
-PlayerComponent::PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_ptr<GameObject> grid) : BaseComponent(parent)
+PlayerComponent::PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_ptr<GameObject> grid,int playerId) : BaseComponent(parent)
 	,m_pGrid{grid}
 	,m_CurrentPos{0,0}
 	,m_maxMoveCooldown{0.4f}
+	,m_PlayerId{playerId}
 {
-	auto tempGrid = m_pGrid.lock()->GetComponent<GridComponent>();
-	auto gridBlock = tempGrid.lock()->GetGridFromPyramidIndex(0,0);
-	glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
-	m_pParent.lock()->SetPosition(newPos.x, newPos.y - tempGrid.lock()->GetGridOffsets().y);
+	ResetPosition();
 
 	m_moveCooldown = 0.f;
 }
@@ -29,10 +27,38 @@ void PlayerComponent::Update(float elapsedSec)
 void PlayerComponent::Kill()
 {
 	ResetPosition();
-
 	m_pParent.lock()->GetComponent<StatsComponent>().lock()->Attack(); //let the statcomponent know it needs to update the lives including the UI
 }
 void PlayerComponent::ResetPosition()
+{
+	auto tempGrid = m_pGrid.lock()->GetComponent<GridComponent>();
+	switch (tempGrid.lock()->GetGameMode())
+	{
+	case Gamemode::singleplayer:
+	case Gamemode::versus:
+		m_CurrentPos.x = 0;
+		m_CurrentPos.y = 0;
+		break;
+	case Gamemode::coop:
+		if (m_PlayerId == 0)
+		{
+			m_CurrentPos.x = 0;
+			m_CurrentPos.y = tempGrid.lock()->GetLayers() - 1;
+		}
+		else
+		{
+			m_CurrentPos.x = tempGrid.lock()->GetLayers() - 1;
+			m_CurrentPos.y = tempGrid.lock()->GetLayers() - 1;
+		}
+		break;
+	}
+
+	auto gridBlock = tempGrid.lock()->GetGridFromPyramidIndex(m_CurrentPos.x, m_CurrentPos.y);
+
+	glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
+	m_pParent.lock()->SetPosition(newPos.x, newPos.y - tempGrid.lock()->GetGridOffsets().y);
+}
+void PlayerComponent::MoveTopPosition()
 {
 	m_CurrentPos.x = 0;
 	m_CurrentPos.y = 0;
@@ -91,10 +117,14 @@ void PlayerComponent::Move(const IPoint2& moveDirection)
 		}
 
 		auto gridBlock = tempGrid.lock()->GetGridFromPyramidIndex(m_CurrentPos.x, m_CurrentPos.y);
-		
 		glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 		m_pParent.lock()->SetPosition(newPos.x,newPos.y - tempGrid.lock()->GetGridOffsets().y);
-		bool EarnedPoints = tempGrid.lock()->NotifyGridblockToggle(m_CurrentPos, 0,1);
+
+		bool EarnedPoints=false;
+		if (tempGrid.lock()->GetGameLevel() != GameLevel::lvl3)
+			EarnedPoints = tempGrid.lock()->NotifyGridblockToggle(m_CurrentPos, (int)tempGrid.lock()->GetGameLevel(), 1);
+		else
+			EarnedPoints = tempGrid.lock()->NotifyGridblockToggle(m_CurrentPos, (int)tempGrid.lock()->GetGameLevel(), 1);
 		
 		if(EarnedPoints)
 			m_pParent.lock()->GetComponent<StatsComponent>().lock()->ChangeScore(50); //let the statcomponent know it needs to update the score including the UI

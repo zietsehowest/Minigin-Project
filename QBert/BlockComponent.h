@@ -18,7 +18,7 @@ namespace GameEngine
 		virtual void Render(const Transform&) const {};
 
 		BlockState GetBlockState() const { return m_CurrentState; }
-		void UpgradeBlock(int gamemode);
+		void ToggleBlock(int level);
 		void DownGradeBlock();
 
 		BlockComponent(std::shared_ptr<GameObject> parent);

@@ -18,7 +18,9 @@ namespace GameEngine
 
 		void ResetPosition();
 
-		PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_ptr<GameObject> grid);
+		void MoveTopPosition();
+
+		PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_ptr<GameObject> grid,int playerId=0);
 		virtual ~PlayerComponent();
 		PlayerComponent(const PlayerComponent& other) = delete;
 		PlayerComponent(PlayerComponent&& other) = delete;
@@ -30,6 +32,7 @@ namespace GameEngine
 		std::weak_ptr<GameObject> m_pGrid;
 		float m_moveCooldown;
 		float m_maxMoveCooldown;
+		int m_PlayerId;
 	};
 }
 

@@ -4,6 +4,7 @@
 #include "GameObject.h"
 #include "Texture2D.h"
 #include <map>
+#include "ManagerComponent.h"
 namespace GameEngine
 {
 	class GridComponent : public BaseComponent
@@ -13,7 +14,7 @@ namespace GameEngine
 		virtual void Update(float) override;
 		virtual void Render(const Transform&) const {};
 
-		GridComponent(std::shared_ptr<GameObject> parent,const std::string& gridFilePath);
+		GridComponent(std::shared_ptr<GameObject> parent,const std::string& gridFilePath,Gamemode mode,GameLevel level = GameLevel::lvl1);
 		virtual ~GridComponent() = default;
 		GridComponent(const GridComponent& other) = delete;
 		GridComponent(GridComponent&& other) = delete;
@@ -25,6 +26,8 @@ namespace GameEngine
 		FVector2 GetGridOffsets() const { return m_offsets; }
 		FVector2 GetStartPos() const { return m_StartPos; }
 		int GetLayers() const { return m_Layers; }
+		Gamemode GetGameMode() const { return m_Gamemode; }
+		GameLevel GetGameLevel() const { return m_Level; }
 
 		bool NotifyGridblockToggle(IPoint2 pos, int gameMode,int deactivateOrActivate);
 
@@ -33,6 +36,9 @@ namespace GameEngine
 		void ReadGridData(const std::string& gridPath);
 		void MakeGrid();
 		void FillVector();
+
+		Gamemode m_Gamemode;
+		GameLevel m_Level;
 
 		float m_BlockWidth;
 		float m_BlockHeight;

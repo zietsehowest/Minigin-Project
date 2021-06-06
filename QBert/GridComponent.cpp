@@ -9,7 +9,9 @@
 #include "BlockComponent.h"
 #include "DiskComponent.h"
 using namespace GameEngine;
-GridComponent::GridComponent(std::shared_ptr<GameObject> parent, const std::string& gridFilePath) : BaseComponent(parent)
+GridComponent::GridComponent(std::shared_ptr<GameObject> parent, const std::string& gridFilePath,Gamemode mode,GameLevel level) : BaseComponent(parent)
+	,m_Gamemode{mode}
+	,m_Level{level}
 {
 
 	ReadGridData(gridFilePath);
@@ -115,14 +117,20 @@ bool GridComponent::NotifyGridblockToggle(IPoint2 pos, int gameMode, int deactiv
 {
 	auto go = GetGridFromPyramidIndex(pos.x, pos.y);
 	auto tempBlock = go.lock()->GetComponent<BlockComponent>().lock();
+	
 	BlockState previousState = tempBlock->GetBlockState();
-	deactivateOrActivate == 1 ? tempBlock->UpgradeBlock(gameMode) : tempBlock->DownGradeBlock();
+	
+	deactivateOrActivate == 1 ? tempBlock->ToggleBlock(gameMode) : tempBlock->DownGradeBlock(); //check if we want to downgrade or toggle a block (downgrading for slick&sam)
+	
 	auto blockState = go.lock()->GetComponent<BlockComponent>().lock()->GetBlockState();
 
 	if (previousState == blockState)
 		return false;
-	
 	go.lock()->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[(int)blockState]);
+	
+	if (gameMode == (int)GameLevel::lvl3)
+		return false;
+
 	return true;
 }
 std::weak_ptr<GameObject> GridComponent::GetGridFromPyramidIndex(int x, int y)
@@ -163,6 +171,8 @@ void GridComponent::ReadGridData(const std::string& gridPath)
 				if (match[1] == "pb")
 					m_Blockpaths.push_back(match[2]);
 				if (match[1] == "sb")
+					m_Blockpaths.push_back(match[2]);
+				if (match[1] == "tb")
 					m_Blockpaths.push_back(match[2]);
 				if (match[1] == "bl")
 					m_Layers = std::stoi(match[2]);

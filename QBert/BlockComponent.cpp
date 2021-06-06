@@ -5,23 +5,32 @@ BlockComponent::BlockComponent(std::shared_ptr<GameObject> parent) : BaseCompone
 {
 
 }
-void BlockComponent::UpgradeBlock(int gamemode)
+void BlockComponent::ToggleBlock(int level)
 {
-	if (gamemode == 0)
+	if (level == 0)
 		m_CurrentState = BlockState::state2;
-	if (gamemode == 1)
+	if (level == 1)
 	{
 		if (m_CurrentState == BlockState::state1)
 			m_CurrentState = BlockState::state3;
 		else if (m_CurrentState == BlockState::state3)
 			m_CurrentState = BlockState::state2;
 	}
+	if (level == 2)
+	{
+		if (m_CurrentState == BlockState::state1)
+			m_CurrentState = BlockState::state2;
+		else
+			m_CurrentState = BlockState::state1;
+	}
 
 }
 void BlockComponent::DownGradeBlock()
 {
-	if (m_CurrentState == BlockState::state2 || m_CurrentState == BlockState::state3)
-		m_CurrentState = BlockState::state1;
+	if (m_CurrentState == BlockState::state1)
+		return;
+	else
+		m_CurrentState = BlockState((int)m_CurrentState - 1);
 }
 void BlockComponent::Update(float)
 {

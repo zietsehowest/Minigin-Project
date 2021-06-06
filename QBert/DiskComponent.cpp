@@ -11,7 +11,7 @@ DiskComponent::DiskComponent(std::shared_ptr<GameObject> parent,IPoint2 DiskCoor
 void GameEngine::DiskComponent::ActivateDisk(std::weak_ptr<GameObject> qbert)
 {
 	m_IsDiskActivated = true;
-	qbert.lock()->SetPosition(m_pParent.lock()->GetTransform().GetPosition().x, m_pParent.lock()->GetTransform().GetPosition().y - 20);
+	qbert.lock()->SetPosition(m_pParent.lock()->GetTransform().GetPosition().x, m_pParent.lock()->GetTransform().GetPosition().y - 20); //put qbert on 
 	m_Qbert = qbert;
 }
 void GameEngine::DiskComponent::Update(float elapsedSec)
@@ -21,7 +21,7 @@ void GameEngine::DiskComponent::Update(float elapsedSec)
 		m_TeleportCooldown -= elapsedSec;
 		if (m_TeleportCooldown <= 0.f)
 		{
-			m_Qbert.lock()->GetComponent<PlayerComponent>().lock()->ResetPosition();
+			m_Qbert.lock()->GetComponent<PlayerComponent>().lock()->MoveTopPosition();
 			m_pParent.lock()->SetIsActive(false); //remove elevator
 		}
 	}
