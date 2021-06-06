@@ -14,6 +14,8 @@ namespace GameEngine
 
 		void Move();
 
+		IPoint2 GetCurrentGridPos() { return m_CurrentPos; }
+
 		GreenCreatureComponent(std::shared_ptr<GameObject> parent, std::weak_ptr<GameObject> grid, const std::vector<std::string>& texturePaths);
 		virtual ~GreenCreatureComponent();
 		GreenCreatureComponent(const GreenCreatureComponent& other) = delete;

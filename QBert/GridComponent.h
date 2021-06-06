@@ -32,6 +32,8 @@ namespace GameEngine
 		bool NotifyGridblockToggle(IPoint2 pos, int gameMode,int deactivateOrActivate);
 
 		std::weak_ptr<GameObject> checkForDisk(int lineHeight, int leftOrRight);
+
+		bool HasClearedLevel();
 	private:
 		void ReadGridData(const std::string& gridPath);
 		void MakeGrid();
@@ -49,6 +51,8 @@ namespace GameEngine
 		std::vector<std::vector<std::shared_ptr<GameObject>>> m_pGridBlocks;
 		std::vector<std::shared_ptr<GameObject>> m_pDisks;
 		std::vector<std::shared_ptr<Texture2D>> m_pBlockTextures;
+
+		void clearGrid();
 
 		void generateRows(int rowCount, float startX);
 	};

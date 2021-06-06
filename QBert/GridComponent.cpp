@@ -30,6 +30,7 @@ GridComponent::GridComponent(std::shared_ptr<GameObject> parent, const std::stri
 		m_pBlockTextures.push_back(ResourceManager::GetInstance().LoadTexture(m_Blockpaths[2]));
 	}
 
+
 	MakeGrid();
 
 	m_offsets.x = m_BlockWidth / 2;
@@ -150,6 +151,43 @@ std::weak_ptr<GameObject> GridComponent::checkForDisk(int lineHeight, int leftOr
 		}
 		else
 			return std::shared_ptr<GameObject>(nullptr);
+}
+bool GridComponent::HasClearedLevel()
+{
+	for (int i = 0; i < m_pGridBlocks.size(); i++)
+	{
+		for (int j = 0; j < m_pGridBlocks[i].size(); j++)
+		{
+			if (m_pGridBlocks[i][j].get() != nullptr)
+			{
+				if (m_pGridBlocks[i][j].get()->GetComponent<BlockComponent>().lock()->GetBlockState() != BlockState::state2)
+					return false;
+			}
+		}
+	}
+
+	clearGrid();
+	return true;
+}
+void GridComponent::clearGrid()
+{
+	//clearing all blocks
+	for (int i = 0; i < m_pGridBlocks.size(); i++)
+	{
+		for (int j = 0; j < m_pGridBlocks[i].size(); j++)
+		{
+			if (m_pGridBlocks[i][j].get() != nullptr)
+			{
+				m_pGridBlocks[i][j]->SetIsActive(false);
+			}
+		}
+	}
+	//clearing disk
+	for (size_t i = 0; i < m_pDisks.size(); i++)
+	{
+		m_pDisks[i]->SetIsActive(false);
+	}
+	m_pDisks.clear();
 }
 void GridComponent::ReadGridData(const std::string& gridPath)
 {

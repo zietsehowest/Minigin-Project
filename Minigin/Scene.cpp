@@ -21,19 +21,8 @@ void Scene::Update(float deltaTime)
 	{
 		object->Update(deltaTime);
 	}
-	auto temp = std::remove_if(m_Objects.begin(), m_Objects.end(), [](std::shared_ptr<GameObject>& s) {
-
-		if (s->GetIsActive())
-		{
-			return false;
-		}
-		else
-			return true;
-		});
-	if (temp != m_Objects.end())
-	{
-		m_Objects.erase(temp, m_Objects.end());
-	}
+	
+	m_Objects.erase(std::remove_if(m_Objects.begin(), m_Objects.end(),[](std::shared_ptr<GameObject>& s) {return !s->GetIsActive(); }), m_Objects.end());
 }
 
 void Scene::Render() const

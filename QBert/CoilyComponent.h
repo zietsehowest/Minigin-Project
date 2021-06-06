@@ -14,6 +14,8 @@ namespace GameEngine
 
 		void Kill();
 
+		IPoint2 GetCurrentGridPos() { return m_CurrentPos; }
+
 		void Move();
 
 		CoilyComponent(std::shared_ptr<GameObject> parent,std::shared_ptr<GameObject> target, std::weak_ptr<GameObject> grid,const std::string& evolutionTexture);

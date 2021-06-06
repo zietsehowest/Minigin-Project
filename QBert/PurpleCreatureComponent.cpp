@@ -5,17 +5,17 @@
 #include "RenderComponent.h"
 using namespace GameEngine;
 PurpleCreatureComponent::~PurpleCreatureComponent() {};
-PurpleCreatureComponent::PurpleCreatureComponent(std::shared_ptr<GameObject> parent, std::weak_ptr<GameObject> grid, const EnemyType& type,const std::vector<std::string>& texturePaths) : BaseComponent(parent)
+PurpleCreatureComponent::PurpleCreatureComponent(std::shared_ptr<GameObject> parent, std::weak_ptr<GameObject> grid,const std::vector<std::string>& texturePaths) : BaseComponent(parent)
 	,m_pGrid{grid}
-	,m_Type{type}
+	,m_Type{ PurpleType(rand()%2)}
 	,m_maxMoveCooldown{1.4f}
 	,m_HeightOffset{15.f}
 {
-	m_pParent.lock()->GetComponent<RenderComponent>().lock()->SetTexture(texturePaths[int(type)]);
+	m_pParent.lock()->GetComponent<RenderComponent>().lock()->SetTexture(texturePaths[int(m_Type)]);
 
 	auto tempGrid = m_pGrid.lock()->GetComponent<GridComponent>();
 	auto bottomLine = tempGrid.lock()->GetLayers()-1;
-	if (type == EnemyType::wrongway) //starts left
+	if (m_Type == PurpleType::wrongway) //starts left
 	{
 		m_CurrentPos = { 0,bottomLine };
 		auto gridBlock = tempGrid.lock()->GetGridFromPyramidIndex(0, bottomLine);
@@ -52,7 +52,7 @@ void PurpleCreatureComponent::Move()
 		Kill();
 		return;
 	}
-	if (m_Type == EnemyType::wrongway)
+	if (m_Type == PurpleType::wrongway)
 	{
 		int randomDirection = rand() % 2;
 		IPoint2 movement{ 0,0 };

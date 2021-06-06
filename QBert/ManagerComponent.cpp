@@ -46,6 +46,8 @@
 using namespace GameEngine;
 ManagerComponent::ManagerComponent(std::shared_ptr<GameObject> parent, Gamemode mode) : BaseComponent(parent)
 	,m_CurrentGamemode{mode}
+	,m_CurrentLevel{GameLevel::lvl1}
+	,m_HasCompletedLevel{false}
 {
 	switch (mode)
 	{
@@ -59,10 +61,30 @@ ManagerComponent::ManagerComponent(std::shared_ptr<GameObject> parent, Gamemode 
 		InitializeVersus();
 		break;
 	}
+
+	SpawnEnemy(EnemyType::GreenEnemy);
+	SpawnEnemy(EnemyType::Coily);
 }
 void ManagerComponent::Update(float elapsedSec)
 {
+	if (m_HasCompletedLevel)
+	{
+		auto grid = std::make_shared<GameObject>();
+		grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_"+ std::to_string((int)m_CurrentLevel) + ".txt", m_CurrentGamemode, m_CurrentLevel));
+		m_pGrid = grid;
+		m_HasCompletedLevel = false;
+	}
 
+	RemoveInactiveEnemies();
+	HandleEnemyCollisions();
+
+
+	if (!m_pGrid.expired() && m_pGrid.lock()->GetComponent<GridComponent>().lock()->HasClearedLevel()) // go to next level
+	{
+		m_HasCompletedLevel = true;
+		RemoveAllEnemies();
+		m_CurrentLevel = GameLevel((int)m_CurrentLevel+1);
+	}
 }
 void ManagerComponent::InitializeSinglePlayer()
 {
@@ -91,8 +113,9 @@ void ManagerComponent::InitializeSinglePlayer()
 
 	//adding grid
 	auto grid = std::make_shared<GameObject>();
-	grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_lvl2.txt",m_CurrentGamemode,GameLevel::lvl2));
+	grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_" + std::to_string((int)m_CurrentLevel) + ".txt",m_CurrentGamemode,m_CurrentLevel));
 	scene->Add(grid);
+	m_pGrid = grid;
 
 	//Creating the Q*Bert
 	auto temp = std::make_shared<GameObject>();
@@ -139,7 +162,7 @@ void ManagerComponent::InitializeCoop()
 
 	//adding grid
 	auto grid = std::make_shared<GameObject>();
-	grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_lvl2.txt",m_CurrentGamemode,GameLevel::lvl2));
+	grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_" + std::to_string((int)m_CurrentLevel) + ".txt",m_CurrentGamemode,m_CurrentLevel));
 	scene->Add(grid);
 
 	//Creating the Q*Bert
@@ -180,6 +203,7 @@ void ManagerComponent::InitializeCoop()
 	qbert2->GetComponent<SubjectComponent>().lock()->AddObserver(std::make_shared<CharacterObserver>(lives2->GetComponent<TextComponent>(), score2->GetComponent<TextComponent>()));
 	scene->Add(qbert2);
 	m_Players.push_back(qbert2);
+	m_pGrid = grid;
 
 #pragma endregion
 	//Command Initialize
@@ -196,4 +220,85 @@ void ManagerComponent::InitializeCoop()
 void ManagerComponent::InitializeVersus()
 {
 
+}
+void ManagerComponent::SpawnEnemy(EnemyType type)
+{
+	auto scene = SceneManager::GetInstance().GetCurrentScene();
+	auto creature = std::make_shared<GameObject>();
+	switch (type)
+	{
+	case EnemyType::GreenEnemy:
+		creature->AddComponent(std::make_shared<RenderComponent>(creature));
+		creature->AddComponent(std::make_shared<GreenCreatureComponent>(creature, m_pGrid, std::vector<std::string>{"Sam.png","Slick.png"}));
+		scene.lock()->Add(creature);
+		m_Enemies.push_back(creature);
+		break;
+	case EnemyType::purpleEnemy:
+		creature->AddComponent(std::make_shared<RenderComponent>(creature));
+		creature->AddComponent(std::make_shared<PurpleCreatureComponent>(creature, m_pGrid, std::vector<std::string>{"WrongWay.png", "Ugg.png"}));
+		scene.lock()->Add(creature);
+		m_Enemies.push_back(creature);
+		break;
+	case EnemyType::Coily:
+		creature->AddComponent(std::make_shared<RenderComponent>(creature));
+		creature->GetComponent<RenderComponent>().lock()->SetTexture("Coily1.png");
+		creature->AddComponent(std::make_shared<CoilyComponent>(creature,m_Players[0],m_pGrid,"Coily2.png"));
+		scene.lock()->Add(creature);
+		m_Enemies.push_back(creature);
+		break;
+	}
+}
+void ManagerComponent::HandleEnemyCollisions()
+{
+	for (auto enemy : m_Enemies)
+	{
+		for (auto player : m_Players)
+		{
+			if (!enemy.lock()->GetComponent<GreenCreatureComponent>().expired())
+			{
+				auto playerPos = player->GetComponent<PlayerComponent>().lock()->GetCurrentGridPos();
+				auto enemyPos = enemy.lock()->GetComponent<GreenCreatureComponent>().lock()->GetCurrentGridPos();
+				if (playerPos == enemyPos)
+				{
+					player->GetComponent<StatsComponent>().lock()->ChangeScore(300);
+					enemy.lock()->SetIsActive(false);
+				}
+					
+			}
+			if (!enemy.lock()->GetComponent<PurpleCreatureComponent>().expired())
+			{
+				auto playerPos = player->GetComponent<PlayerComponent>().lock()->GetCurrentGridPos();
+				auto enemyPos = enemy.lock()->GetComponent<PurpleCreatureComponent>().lock()->GetCurrentGridPos();
+				if (playerPos == enemyPos)
+				{
+					player->GetComponent<PlayerComponent>().lock()->Kill(); //clear all enemies
+					RemoveAllEnemies();
+				}
+
+			}
+			if (!enemy.lock()->GetComponent<CoilyComponent>().expired())
+			{
+				auto playerPos = player->GetComponent<PlayerComponent>().lock()->GetCurrentGridPos();
+				auto enemyPos = enemy.lock()->GetComponent<CoilyComponent>().lock()->GetCurrentGridPos();
+				if (playerPos == enemyPos)
+				{
+					player->GetComponent<PlayerComponent>().lock()->Kill(); //clear all enemies
+					RemoveAllEnemies();
+				}
+
+			}
+		}
+	}
+}
+
+void ManagerComponent::RemoveInactiveEnemies()
+{
+	m_Enemies.erase(std::remove_if(m_Enemies.begin(), m_Enemies.end(), [](std::weak_ptr<GameObject>& s) {return s.expired(); }), m_Enemies.end());
+}
+
+void ManagerComponent::RemoveAllEnemies()
+{
+	for (auto enemy : m_Enemies)
+		if (!enemy.expired())
+			enemy.lock()->SetIsActive(false);
 }

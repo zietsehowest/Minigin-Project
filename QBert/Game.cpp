@@ -52,7 +52,7 @@ void Game::LoadGame() const
 
 	auto go = std::make_shared<GameObject>();
 
-	go->AddComponent<>(std::make_shared<ManagerComponent>(go, Gamemode::coop));
+	go->AddComponent<>(std::make_shared<ManagerComponent>(go, Gamemode::singleplayer));
 	scene.Add(go);
 
 	////Adding test Coily

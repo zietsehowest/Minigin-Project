@@ -9,6 +9,9 @@ namespace GameEngine
 	enum class Gamemode {
 		singleplayer,coop,versus
 	};
+	enum class EnemyType {
+		purpleEnemy,GreenEnemy,Coily
+	};
 	class ManagerComponent : public BaseComponent
 	{
 	public:
@@ -27,10 +30,20 @@ namespace GameEngine
 		std::vector<std::weak_ptr<GameObject>> m_Enemies;
 		std::weak_ptr<GameObject> m_pGrid;
 		Gamemode m_CurrentGamemode;
+		GameLevel m_CurrentLevel;
+		bool m_HasCompletedLevel;
 
 		void InitializeSinglePlayer();
 		void InitializeCoop();
 		void InitializeVersus();
+
+		void HandleEnemyCollisions();
+
+		void RemoveInactiveEnemies();
+		void RemoveAllEnemies();
+
+		void SpawnEnemy(EnemyType type);
+
 	};
 }
 
