@@ -5,6 +5,9 @@
 #include <RenderComponent.h>
 #include <PlayerComponent.h>
 #include <StatsComponent.h>
+#include "Audio.h"
+#include "GameAudio.h"
+#include "ServiceLocator.h"
 using namespace GameEngine;
 CoilyComponent::~CoilyComponent() {};
 CoilyComponent::CoilyComponent(std::shared_ptr<GameObject> parent, std::shared_ptr<GameObject> target, std::weak_ptr<GameObject> grid, const std::string& evolutionTexture,bool IsAI) : BaseComponent(parent)
@@ -64,6 +67,9 @@ void CoilyComponent::Move(bool MoveManual,IPoint2 moveDirection)
 
 		glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 		m_pParent.lock()->SetPosition(newPos.x, newPos.y - tempGrid.lock()->GetGridOffsets().y);
+
+		auto Audio = ServiceLocator::getAudio();
+		Audio->Play("Enemy_Jump", 1);
 	}
 	if (m_CoilyState == CoilyState::chase && !MoveManual) //chase Qbert  //AI moves
 	{
@@ -99,6 +105,9 @@ void CoilyComponent::Move(bool MoveManual,IPoint2 moveDirection)
 
 			glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 			m_pParent.lock()->SetPosition(newPos.x, newPos.y - tempGrid.lock()->GetGridOffsets().y);
+
+			auto Audio = ServiceLocator::getAudio();
+			Audio->Play("Enemy_Jump", 1);
 		}
 		else //above target
 		{
@@ -120,6 +129,9 @@ void CoilyComponent::Move(bool MoveManual,IPoint2 moveDirection)
 
 			glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 			m_pParent.lock()->SetPosition(newPos.x, newPos.y - tempGrid.lock()->GetGridOffsets().y);
+
+			auto Audio = ServiceLocator::getAudio();
+			Audio->Play("Enemy_Jump", 1);
 		}
 
 	}
@@ -150,6 +162,9 @@ void CoilyComponent::Move(bool MoveManual,IPoint2 moveDirection)
 			auto gridBlock = tempGrid.lock()->GetGridFromPyramidIndex(m_CurrentPos.x, m_CurrentPos.y);
 			glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 			m_pParent.lock()->SetPosition(newPos.x, newPos.y - tempGrid.lock()->GetGridOffsets().y);
+
+			auto Audio = ServiceLocator::getAudio();
+			Audio->Play("Enemy_Jump", 1);
 		}
 	}
 	m_moveCooldown = m_maxMoveCooldown;

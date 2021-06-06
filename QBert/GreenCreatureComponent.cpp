@@ -3,6 +3,9 @@
 #include "../QBert/GridComponent.h"
 #include "../QBert/BlockComponent.h"
 #include "RenderComponent.h"
+#include "Audio.h"
+#include "GameAudio.h"
+#include "ServiceLocator.h"
 using namespace GameEngine;
 GreenCreatureComponent::~GreenCreatureComponent() {};
 GreenCreatureComponent::GreenCreatureComponent(std::shared_ptr<GameObject> parent, std::weak_ptr<GameObject> grid, const std::vector<std::string>& texturePaths) : BaseComponent(parent)
@@ -58,6 +61,9 @@ void GreenCreatureComponent::Move()
 	glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 	m_pParent.lock()->SetPosition(newPos.x, newPos.y - tempGrid.lock()->GetGridOffsets().y);
 	tempGrid.lock()->NotifyGridblockToggle({ m_CurrentPos.x,m_CurrentPos.y }, 0, -1);
+
+	auto Audio = ServiceLocator::getAudio();
+	Audio->Play("Enemy_Jump", 1);
 
 	m_moveCooldown = m_maxMoveCooldown;
 

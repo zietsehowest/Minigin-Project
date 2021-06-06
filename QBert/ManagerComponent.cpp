@@ -46,7 +46,7 @@
 using namespace GameEngine;
 ManagerComponent::ManagerComponent(std::shared_ptr<GameObject> parent, Gamemode mode) : BaseComponent(parent)
 	,m_CurrentGamemode{mode}
-	,m_CurrentLevel{GameLevel::lvl2}
+	,m_CurrentLevel{GameLevel::lvl1}
 	,m_HasCompletedLevel{false}
 {
 	switch (mode)
@@ -67,15 +67,15 @@ ManagerComponent::ManagerComponent(std::shared_ptr<GameObject> parent, Gamemode 
 	SpawnEnemy(EnemyType::GreenEnemy);
 		
 }
-void ManagerComponent::Update(float elapsedSec)
+void ManagerComponent::Update(float)
 {
 	if (m_HasCompletedLevel)
 	{
-		/*auto grid = std::make_shared<GameObject>();
+		auto grid = std::make_shared<GameObject>();
 		grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_"+ std::to_string((int)m_CurrentLevel) + ".txt", m_CurrentGamemode, m_CurrentLevel));
 		m_pGrid = grid;
 		m_HasCompletedLevel = false;
-		SceneManager::GetInstance().GetCurrentScene().lock()->Add(m_pGrid.lock());*/
+		SceneManager::GetInstance().GetCurrentScene().lock()->Add(m_pGrid.lock());
 	}
 
 	RemoveInactiveEnemies();
@@ -86,6 +86,9 @@ void ManagerComponent::Update(float elapsedSec)
 	{
 		m_HasCompletedLevel = true;
 		RemoveAllEnemies();
+
+		auto Audio = ServiceLocator::getAudio();
+		Audio->Play("Level_Complete", 1);
 		//reset level
 	}
 }

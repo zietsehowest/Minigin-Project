@@ -7,12 +7,15 @@
 #include "../QBert/BlockComponent.h"
 #include "StatsComponent.h"
 #include "../QBert/DiskComponent.h"
+#include "Audio.h"
+#include "GameAudio.h"
+#include "ServiceLocator.h"
 using namespace GameEngine;
 PlayerComponent::~PlayerComponent() {};
 PlayerComponent::PlayerComponent(std::shared_ptr<GameObject> parent,std::weak_ptr<GameObject> grid,int playerId) : BaseComponent(parent)
 	,m_pGrid{grid}
 	,m_CurrentPos{0,0}
-	,m_maxMoveCooldown{0.4f}
+	,m_maxMoveCooldown{0.32f}
 	,m_PlayerId{playerId}
 	,m_IsOnDisk{false}
 {
@@ -29,6 +32,8 @@ void PlayerComponent::Kill()
 {
 	ResetPosition();
 	m_pParent.lock()->GetComponent<StatsComponent>().lock()->Attack(); //let the statcomponent know it needs to update the lives including the UI
+	auto Audio = ServiceLocator::getAudio();
+	Audio->Play("Qbert_Death", 1);
 }
 void PlayerComponent::ResetPosition()
 {
@@ -93,12 +98,13 @@ void PlayerComponent::Move(const IPoint2& moveDirection)
 			auto tempLeftDisk = tempGrid.lock()->checkForDisk(m_CurrentPos.y+1, -1); //jump on disk and remove disk
 			if (!tempLeftDisk.expired())
 			{
+
 				tempLeftDisk.lock()->GetComponent<DiskComponent>().lock()->ActivateDisk(m_pParent);
 				m_moveCooldown = m_maxMoveCooldown;
 
 				m_CurrentPos.x -= moveDirection.x;
 				m_CurrentPos.y -= moveDirection.y;
-				
+
 				return;
 			}
 			else
@@ -112,6 +118,7 @@ void PlayerComponent::Move(const IPoint2& moveDirection)
 			auto tempRightDisk = tempGrid.lock()->checkForDisk(m_CurrentPos.y+1, 1);
 			if (!tempRightDisk.expired())
 			{
+
 				tempRightDisk.lock()->GetComponent<DiskComponent>().lock()->ActivateDisk(m_pParent);
 				m_moveCooldown = m_maxMoveCooldown;
 				
@@ -131,6 +138,9 @@ void PlayerComponent::Move(const IPoint2& moveDirection)
 		auto gridBlock = tempGrid.lock()->GetGridFromPyramidIndex(m_CurrentPos.x, m_CurrentPos.y);
 		glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 		m_pParent.lock()->SetPosition(newPos.x,newPos.y - tempGrid.lock()->GetGridOffsets().y);
+
+		auto Audio = ServiceLocator::getAudio();
+		Audio->Play("Qbert_Jump", 1);
 
 		bool EarnedPoints=false;
 		if (tempGrid.lock()->GetGameLevel() != GameLevel::lvl3)

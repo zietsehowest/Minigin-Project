@@ -1,50 +1,19 @@
 #include "Game.h"
 #include "MiniginPCH.h"
-#include "Core.h"
-#include <chrono>
-#include <thread>
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
-#include "ResourceManager.h"
 #include <SDL.h>
 #include "GameObject.h"
 #include "Scene.h"
 #include "CharacterObserver.h"
 #include "Observer.h"
-
-#pragma region AudioIncludes
-#include "Audio.h"
-#include "ServiceLocator.h"
-#include "AudioLogger.h"
-#include "GameAudio.h"
-#pragma endregion
-
-#pragma region ComponentIncludes
-#include "RenderComponent.h"
-#include "TextComponent.h"
-#include "FPSComponent.h"
-#include "SubjectComponent.h"
-#include "StatsComponent.h"
-#include "GridComponent.h"
-#include "PlayerComponent.h"
-#include "CoilyComponent.h"
-#include "PurpleCreatureComponent.h"
-#include "GreenCreatureComponent.h"
 #include "ManagerComponent.h"
+#include "Audio.h"
+#include "GameAudio.h"
+#include "ServiceLocator.h"
 #pragma endregion
-
-#pragma region CommandIncludes
-#include "KillCommand.h"
-#include "flyingDiscCoilyCommand.h"
-#include "CatchingSlickAndSamCommand.h"
-#include "endOfStageCommand.h"
-#include "ColorChangeCommand.h"
-#include "MoveCommand.h"
-#pragma endregion
-
 using namespace std;
-using namespace std::chrono;
 using namespace GameEngine;
 void Game::LoadGame() const
 {
@@ -54,4 +23,23 @@ void Game::LoadGame() const
 
 	go->AddComponent<>(std::make_shared<ManagerComponent>(go, Gamemode::versus));
 	scene.Add(go);
+
+	ServiceLocator::provide(new GameAudio());
+	auto Audio = ServiceLocator::getAudio();
+	
+	Audio->AddSound("Disk_Taken","../Data/Sound/Disk_Taken.mp3");
+	Audio->SetVolume("Disk_Taken", 5);
+
+	Audio->AddSound("Level_Complete","../Data/Sound/Level_Complete.mp3");
+	Audio->SetVolume("Level_Complete", 5);
+
+	Audio->AddSound("Enemy_Jump","../Data/Sound/Enemy_jump.mp3");
+	Audio->SetVolume("Enemy_Jump", 3);
+
+	Audio->AddSound("Qbert_Death","../Data/Sound/Qbert_Death.wav");
+	Audio->SetVolume("Qbert_Death", 5);
+
+	Audio->AddSound("Qbert_Jump","../Data/Sound/Qbert_jump.mp3");
+	Audio->SetVolume("Qbert_Jump", 5);
+	
 }

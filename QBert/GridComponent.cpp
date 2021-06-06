@@ -127,6 +127,7 @@ bool GridComponent::NotifyGridblockToggle(IPoint2 pos, int gameMode, int deactiv
 
 	if (previousState == blockState)
 		return false;
+	
 	go.lock()->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[(int)blockState]);
 	
 	if (gameMode == (int)GameLevel::lvl3)
@@ -156,9 +157,9 @@ std::weak_ptr<GameObject> GridComponent::checkForDisk(int lineHeight, int leftOr
 }
 bool GridComponent::HasClearedLevel()
 {
-	for (int i = 0; i < m_pGridBlocks.size(); i++)
+	for (size_t i = 0; i < m_pGridBlocks.size(); i++)
 	{
-		for (int j = 0; j < m_pGridBlocks[i].size(); j++)
+		for (size_t j = 0; j < m_pGridBlocks[i].size(); j++)
 		{
 			if (m_pGridBlocks[i][j].get() != nullptr)
 			{
@@ -168,15 +169,15 @@ bool GridComponent::HasClearedLevel()
 		}
 	}
 
-	//clearGrid(); clearing the level
+	clearGrid();
 	return true;
 }
 void GridComponent::clearGrid()
 {
 	//clearing all blocks
-	for (int i = 0; i < m_pGridBlocks.size(); i++)
+	for (size_t i = 0; i < m_pGridBlocks.size(); i++)
 	{
-		for (int j = 0; j < m_pGridBlocks[i].size(); j++)
+		for (size_t j = 0; j < m_pGridBlocks[i].size(); j++)
 		{
 			if (m_pGridBlocks[i][j].get() != nullptr)
 			{

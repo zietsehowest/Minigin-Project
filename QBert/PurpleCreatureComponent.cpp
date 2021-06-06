@@ -3,6 +3,9 @@
 #include "../QBert/GridComponent.h"
 #include "../QBert/BlockComponent.h"
 #include "RenderComponent.h"
+#include "Audio.h"
+#include "GameAudio.h"
+#include "ServiceLocator.h"
 using namespace GameEngine;
 PurpleCreatureComponent::~PurpleCreatureComponent() {};
 PurpleCreatureComponent::PurpleCreatureComponent(std::shared_ptr<GameObject> parent, std::weak_ptr<GameObject> grid,const std::vector<std::string>& texturePaths) : BaseComponent(parent)
@@ -71,6 +74,9 @@ void PurpleCreatureComponent::Move()
 		
 		glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 		m_pParent.lock()->SetPosition(newPos.x - tempGrid.lock()->GetGridOffsets().x, newPos.y + m_HeightOffset);
+
+		auto Audio = ServiceLocator::getAudio();
+		Audio->Play("Enemy_Jump", 1);
 	}
 	else
 	{
@@ -91,6 +97,9 @@ void PurpleCreatureComponent::Move()
 
 		glm::vec3 newPos = gridBlock.lock()->GetTransform().GetPosition();
 		m_pParent.lock()->SetPosition(newPos.x + tempGrid.lock()->GetGridOffsets().x, newPos.y + m_HeightOffset);
+
+		auto Audio = ServiceLocator::getAudio();
+		Audio->Play("Enemy_Jump", 1);
 	}
 
 }

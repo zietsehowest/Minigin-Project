@@ -7,6 +7,9 @@
 #include "ResourceManager.h"
 #include <SDL.h>
 #include <vld.h>
+#include "ServiceLocator.h"
+#include "Audio.h"
+#include "GameAudio.h"
 using namespace std;
 using namespace std::chrono;
 using namespace GameEngine;
@@ -64,6 +67,9 @@ void GameEngine::Core::Cleanup()
 	Mix_CloseAudio();
 	Mix_Quit();
 	SDL_Quit();
+	
+	if (ServiceLocator::getAudio())
+		delete ServiceLocator::getAudio();
 }
 
 void GameEngine::Core::Run()
