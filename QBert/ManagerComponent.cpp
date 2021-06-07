@@ -92,6 +92,8 @@ void ManagerComponent::Update(float)
 		{
 
 		}
+		else
+			m_HasCompletedLevel = true;
 	}
 }
 void ManagerComponent::InitializeSinglePlayer()
