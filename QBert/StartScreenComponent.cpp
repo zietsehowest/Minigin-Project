@@ -18,7 +18,7 @@ void StartScreenComponent::Render(const Transform&) const
 {
 	static bool checkBox = false;
 	static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
-	ImGui::Begin("Window", 0, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin("Window", 0, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 	ImGui::SetWindowPos(ImVec2{ 160,100 });
 	ImGui::Text("Gamemodes:");
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(7.0f, 0.6f, 0.6f));
