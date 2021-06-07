@@ -62,7 +62,7 @@ void GridComponent::InitializeNewLevel(const std::string& gridFilePath, Gamemode
 }
 void GridComponent::MakeGrid()
 {
-	auto gridBlock = std::make_shared<GameObject>();
+	auto gridBlock = std::make_shared<GameObject>(-1);
 	gridBlock->AddComponent(std::make_shared<RenderComponent>(gridBlock));
 	gridBlock->AddComponent(std::make_shared<BlockComponent>(gridBlock));
 	gridBlock->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[0]);
@@ -120,7 +120,7 @@ void GridComponent::generateRows(int rowCount,float startX)
 
 	for (float i = startX; i <= endX; i += m_BlockWidth)
 	{
-		auto gridBlock = std::make_shared<GameObject>();
+		auto gridBlock = std::make_shared<GameObject>(-1);
 		gridBlock->AddComponent(std::make_shared<RenderComponent>(gridBlock));
 		gridBlock->AddComponent(std::make_shared<BlockComponent>(gridBlock));
 		gridBlock->GetComponent<RenderComponent>().lock()->SetTexture(m_pBlockTextures[0]);
@@ -218,6 +218,10 @@ void GridComponent::clearGrid()
 	m_pBlockTextures.clear();
 	m_Blockpaths.clear();
 	m_pDisks.clear();
+}
+int GridComponent::CountDisksLeft()
+{
+	return (int)std::count_if(m_pDisks.begin(), m_pDisks.end(), [](std::shared_ptr<GameObject> p1) {return !p1->GetComponent<DiskComponent>().lock()->IsDiskActivated(); });
 }
 void GridComponent::ReadGridData(const std::string& gridPath)
 {

@@ -25,8 +25,10 @@ void Scene::Update(float deltaTime)
 	m_Objects.erase(std::remove_if(m_Objects.begin(), m_Objects.end(),[](std::shared_ptr<GameObject>& s) {return !s->GetIsActive(); }), m_Objects.end());
 }
 
-void Scene::Render() const
+void Scene::Render()
 {
+	 sort(m_Objects.begin(), m_Objects.end(), [](const std::shared_ptr<GameObject>& go1, const std::shared_ptr<GameObject>& go2) {return go1->GetRenderPriority() > go2->GetRenderPriority(); });
+
 	for (const auto& object : m_Objects)
 	{
 		object->Render();

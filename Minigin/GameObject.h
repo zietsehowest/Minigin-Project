@@ -41,7 +41,14 @@ namespace GameEngine
 
 		inline bool GetIsActive() const { return m_IsActive; }
 
-		GameObject() = default;
+		inline int GetRenderPriority() { return m_RenderPriority; }
+
+		inline int SetRenderPriority(int renderPrio) { m_RenderPriority = renderPrio; }
+
+		GameObject(int renderPrio =0)
+			:m_RenderPriority{renderPrio}
+		{}
+
 		virtual ~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -64,5 +71,6 @@ namespace GameEngine
 		Transform m_Transform;
 		std::vector<std::shared_ptr<BaseComponent>> m_Components;
 		bool m_IsActive = true;
+		int m_RenderPriority;
 	};
 }

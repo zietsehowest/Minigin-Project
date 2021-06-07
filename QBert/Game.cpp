@@ -13,6 +13,7 @@
 #include "GameAudio.h"
 #include "ServiceLocator.h"
 #include "StartScreenComponent.h"
+#include "FinalScreenComponent.h"
 #pragma endregion
 using namespace std;
 using namespace GameEngine;
@@ -27,6 +28,13 @@ void Game::LoadGame() const
 	go->GetComponent<RenderComponent>().lock()->SetTexture("../Data/startScreen_Background.png");
 	scene.Add(go);
 
+	auto& manager = SceneManager::GetInstance().CreateScene("FinalScreen");
+	auto object = std::make_shared<GameObject>();
+
+	object->AddComponent(std::make_shared<FinalScreenComponent>(object,"You won or lost !"));
+	object->AddComponent(std::make_shared<RenderComponent>(object));
+	object->GetComponent<RenderComponent>().lock()->SetTexture("../Data/startScreen_Background.png");
+	manager.Add(go);
 
 	ServiceLocator::provide(new GameAudio());
 	auto Audio = ServiceLocator::getAudio();

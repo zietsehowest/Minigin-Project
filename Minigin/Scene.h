@@ -12,7 +12,7 @@ namespace GameEngine
 		void Add(const std::shared_ptr<GameObject>& object);
 
 		void Update(float deltaTime);
-		void Render() const;
+		void Render();
 
 		const std::string& GetName() const { return m_Name; }
 

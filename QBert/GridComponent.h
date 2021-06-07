@@ -38,6 +38,8 @@ namespace GameEngine
 		std::weak_ptr<GameObject> checkForDisk(int lineHeight, int leftOrRight);
 
 		bool HasClearedLevel();
+
+		int CountDisksLeft();
 	private:
 		void ReadGridData(const std::string& gridPath);
 		void MakeGrid();

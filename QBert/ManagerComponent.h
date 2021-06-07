@@ -33,17 +33,24 @@ namespace GameEngine
 		GameLevel m_CurrentLevel;
 		bool m_HasCompletedLevel;
 		bool m_testSpawn =true;
+		float m_SpawnTimer;
+		float m_MaxSpawnTimer;
 
 		void InitializeSinglePlayer();
 		void InitializeCoop();
 		void InitializeVersus();
 
+		void SpawnEnemies(float elapsedSec);
+
 		void HandleEnemyCollisions();
 
 		void RemoveInactiveEnemies();
 		void RemoveAllEnemies();
+		void ResetGame();
 
 		void SpawnEnemy(EnemyType type);
+
+		bool HasCoilyInlevel();
 
 
 

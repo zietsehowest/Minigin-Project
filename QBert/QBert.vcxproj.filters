@@ -51,6 +51,9 @@
     <ClCompile Include="StartScreenComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="FinalScreenComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -81,6 +84,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="StartScreenComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FinalScreenComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>

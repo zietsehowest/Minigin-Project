@@ -48,6 +48,8 @@ ManagerComponent::ManagerComponent(std::shared_ptr<GameObject> parent, Gamemode 
 	,m_CurrentGamemode{mode}
 	,m_CurrentLevel{GameLevel::lvl1}
 	,m_HasCompletedLevel{false}
+	,m_MaxSpawnTimer{7.f}
+	,m_SpawnTimer{7.f}
 {
 	switch (mode)
 	{
@@ -67,8 +69,10 @@ ManagerComponent::ManagerComponent(std::shared_ptr<GameObject> parent, Gamemode 
 	SpawnEnemy(EnemyType::GreenEnemy);
 		
 }
-void ManagerComponent::Update(float)
+void ManagerComponent::Update(float elapsedSec)
 {
+	SpawnEnemies(elapsedSec);
+
 	if (m_HasCompletedLevel)
 	{
 		m_pGrid.lock()->GetComponent<GridComponent>().lock()->InitializeNewLevel("../Data/Grid/GridInfo_"+ std::to_string((int)m_CurrentLevel) + ".txt", m_CurrentGamemode, m_CurrentLevel);
@@ -88,12 +92,29 @@ void ManagerComponent::Update(float)
 		//reset level
 		m_CurrentLevel = GameLevel((int)m_CurrentLevel + 1);
 
+		int disksLeft = m_pGrid.lock()->GetComponent<GridComponent>().lock()->CountDisksLeft();
+		if (disksLeft > 0)
+		{
+			for (auto player : m_Players)
+			{
+				player->GetComponent<StatsComponent>().lock()->ChangeScore(disksLeft * 50);
+			}
+		}
+
 		if ((int)m_CurrentLevel > 2) //we finished the game !! go to endscreen
 		{
-
+			SceneManager::GetInstance().SetCurrentScene("FinalScreen");
 		}
 		else
 			m_HasCompletedLevel = true;
+	}
+	//check if a player is dead
+	for (auto player : m_Players)
+	{
+		if (player->GetComponent<StatsComponent>().lock()->GetLives() <= 0)
+		{
+			SceneManager::GetInstance().SetCurrentScene("FinalScreen");
+		}
 	}
 }
 void ManagerComponent::InitializeSinglePlayer()
@@ -128,7 +149,7 @@ void ManagerComponent::InitializeSinglePlayer()
 	m_pGrid = grid;
 
 	//Creating the Q*Bert
-	auto temp = std::make_shared<GameObject>();
+	auto temp = std::make_shared<GameObject>(-2);
 	temp->AddComponent(std::make_shared<RenderComponent>(temp));
 	temp->GetComponent<RenderComponent>().lock()->SetTexture("QBertMain.png");
 	temp->AddComponent(std::make_shared<StatsComponent>(temp, 3));
@@ -143,6 +164,11 @@ void ManagerComponent::InitializeSinglePlayer()
 	InputManager::GetInstance().AddControlInput({ SDLK_e,InputType::released,true }, std::make_shared<MoveCommand>(temp, MoveDirection::topright));
 	InputManager::GetInstance().AddControlInput({ SDLK_a,InputType::released,true }, std::make_shared<MoveCommand>(temp, MoveDirection::bottomleft));
 	InputManager::GetInstance().AddControlInput({ SDLK_d,InputType::released,true }, std::make_shared<MoveCommand>(temp, MoveDirection::bottomright));
+
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released,false }, std::make_shared<MoveCommand>(temp, MoveDirection::topleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(temp, MoveDirection::topright));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNLEFT,InputType::released,false }, std::make_shared<MoveCommand>(temp, MoveDirection::bottomleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(temp, MoveDirection::bottomright));
 }
 void ManagerComponent::InitializeCoop()
 {
@@ -176,7 +202,7 @@ void ManagerComponent::InitializeCoop()
 	scene->Add(grid);
 
 	//Creating the Q*Bert
-	auto qbert = std::make_shared<GameObject>();
+	auto qbert = std::make_shared<GameObject>(-2);
 	qbert->AddComponent(std::make_shared<RenderComponent>(qbert));
 	qbert->GetComponent<RenderComponent>().lock()->SetTexture("QBertMain.png");
 	qbert->AddComponent(std::make_shared<StatsComponent>(qbert, 3));
@@ -204,7 +230,7 @@ void ManagerComponent::InitializeCoop()
 	scene->Add(score2);
 
 	//Creating the Q*Bert2
-	auto qbert2 = std::make_shared<GameObject>();
+	auto qbert2 = std::make_shared<GameObject>(-2);
 	qbert2->AddComponent(std::make_shared<RenderComponent>(qbert2));
 	qbert2->GetComponent<RenderComponent>().lock()->SetTexture("QBertSecond.png");
 	qbert2->AddComponent(std::make_shared<StatsComponent>(qbert2, 3));
@@ -221,11 +247,22 @@ void ManagerComponent::InitializeCoop()
 	InputManager::GetInstance().AddControlInput({ SDLK_e,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::topright));
 	InputManager::GetInstance().AddControlInput({ SDLK_a,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomleft));
 	InputManager::GetInstance().AddControlInput({ SDLK_d,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomright));
+	
+	InputManager::GetInstance().AddControlInput({ SDLK_KP_7,InputType::released,true }, std::make_shared<MoveCommand>(qbert2, MoveDirection::topleft));
+	InputManager::GetInstance().AddControlInput({ SDLK_KP_9,InputType::released,true }, std::make_shared<MoveCommand>(qbert2, MoveDirection::topright));
+	InputManager::GetInstance().AddControlInput({ SDLK_KP_4,InputType::released,true }, std::make_shared<MoveCommand>(qbert2, MoveDirection::bottomleft));
+	InputManager::GetInstance().AddControlInput({ SDLK_KP_6,InputType::released,true }, std::make_shared<MoveCommand>(qbert2, MoveDirection::bottomright));
 
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released,false }, std::make_shared<MoveCommand>(qbert2, MoveDirection::topleft));
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(qbert2, MoveDirection::topright));
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNLEFT,InputType::released,false }, std::make_shared<MoveCommand>(qbert2, MoveDirection::bottomleft));
-	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(qbert2, MoveDirection::bottomright));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released,false }, std::make_shared<MoveCommand>(qbert, MoveDirection::topleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(qbert, MoveDirection::topright));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNLEFT,InputType::released,false }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomright));
+
+
+	InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_UPLEFT,InputType::released,false }, std::make_shared<MoveCommand>(qbert2, MoveDirection::topleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_UPRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(qbert2, MoveDirection::topright));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_DOWNLEFT,InputType::released,false }, std::make_shared<MoveCommand>(qbert2, MoveDirection::bottomleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_DOWNRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(qbert2, MoveDirection::bottomright));
 }
 void ManagerComponent::InitializeVersus()
 {
@@ -261,7 +298,7 @@ void ManagerComponent::InitializeVersus()
 	m_pGrid = grid;
 
 	//Creating the Q*Bert
-	auto qbert = std::make_shared<GameObject>();
+	auto qbert = std::make_shared<GameObject>(-2);
 	qbert->AddComponent(std::make_shared<RenderComponent>(qbert));
 	qbert->GetComponent<RenderComponent>().lock()->SetTexture("QBertMain.png");
 	qbert->AddComponent(std::make_shared<StatsComponent>(qbert, 3));
@@ -280,12 +317,37 @@ void ManagerComponent::InitializeVersus()
 	InputManager::GetInstance().AddControlInput({ SDLK_e,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::topright));
 	InputManager::GetInstance().AddControlInput({ SDLK_a,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomleft));
 	InputManager::GetInstance().AddControlInput({ SDLK_d,InputType::released,true }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomright));
+
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released,false }, std::make_shared<MoveCommand>(qbert, MoveDirection::topleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(qbert, MoveDirection::topright));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNLEFT,InputType::released,false }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomleft));
+	InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(qbert, MoveDirection::bottomright));
+}
+
+void ManagerComponent::SpawnEnemies(float elapsedSec)
+{
+	if (m_SpawnTimer > 0.f)
+	{
+		m_SpawnTimer -= elapsedSec;
+	}
+	else
+	{
+		m_SpawnTimer = m_MaxSpawnTimer;
+		m_pGrid.lock()->GetComponent<GridComponent>().lock()->GetLayers();
+		int randomEnemySpawn = rand() % 3;
+		if (randomEnemySpawn == 2 && HasCoilyInlevel())
+			return;
+
+		std::cout << "type: " << randomEnemySpawn << std::endl;
+			
+		SpawnEnemy(EnemyType(randomEnemySpawn));
+	}
 }
 
 void ManagerComponent::SpawnEnemy(EnemyType type)
 {
 	auto scene = SceneManager::GetInstance().GetCurrentScene();
-	auto creature = std::make_shared<GameObject>();
+	auto creature = std::make_shared<GameObject>(-2);
 	switch (type)
 	{
 	case EnemyType::GreenEnemy:
@@ -313,13 +375,28 @@ void ManagerComponent::SpawnEnemy(EnemyType type)
 		creature->AddComponent(std::make_shared<CoilyComponent>(creature, m_Players[0], m_pGrid, "Coily2.png",false));
 		scene.lock()->Add(creature);
 		m_Enemies.push_back(creature);
-
-		InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPLEFT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::topleft, false));
-		InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_UPRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::topright, false));
-		InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNLEFT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::bottomleft, false));
-		InputManager::GetInstance().AddControlInput({ VK_PAD_LTHUMB_DOWNRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::bottomright, false));
+		
+		InputManager::GetInstance().AddControlInput({ SDLK_KP_7,InputType::released,true }, std::make_shared<MoveCommand>(creature, MoveDirection::topleft,false));
+		InputManager::GetInstance().AddControlInput({ SDLK_KP_9,InputType::released,true }, std::make_shared<MoveCommand>(creature, MoveDirection::topright,false));
+		InputManager::GetInstance().AddControlInput({ SDLK_KP_4,InputType::released,true }, std::make_shared<MoveCommand>(creature, MoveDirection::bottomleft,false));
+		InputManager::GetInstance().AddControlInput({ SDLK_KP_6,InputType::released,true }, std::make_shared<MoveCommand>(creature, MoveDirection::bottomright,false));
+		
+		InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_UPLEFT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::topleft,false));
+		InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_UPRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::topright,false));
+		InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_DOWNLEFT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::bottomleft,false));
+		InputManager::GetInstance().AddControlInput({ VK_PAD_RTHUMB_DOWNRIGHT,InputType::released,false }, std::make_shared<MoveCommand>(creature, MoveDirection::bottomright,false));
 		break;
 	}
+}
+
+bool ManagerComponent::HasCoilyInlevel()
+{
+	auto it = std::find_if(m_Enemies.begin(), m_Enemies.end(), [](std::weak_ptr<GameObject> c) {return !c.lock()->GetComponent<CoilyComponent>().expired();});
+
+	if (it != m_Enemies.end())
+		return true;
+	else
+		return false;
 }
 
 void ManagerComponent::HandleEnemyCollisions()
@@ -379,4 +456,8 @@ void ManagerComponent::RemoveAllEnemies()
 	for (auto enemy : m_Enemies)
 		if (!enemy.expired())
 			enemy.lock()->SetIsActive(false);
+}
+
+void ManagerComponent::ResetGame()
+{
 }
