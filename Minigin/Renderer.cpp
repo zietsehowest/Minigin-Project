@@ -26,19 +26,11 @@ void GameEngine::Renderer::Render()
 {
 	SDL_RenderClear(m_Renderer);
 
-	SceneManager::GetInstance().Render();
-
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_Window);
 	ImGui::NewFrame();
 
-	//Rendering of the Imgui framework
-	if (m_ShowDemo)
-		RenderImguiDemo();
-	else
-		RenderCustomImguiUI();
-
-	//RenderInstructionMenuUI();
+	SceneManager::GetInstance().Render();
 	
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
@@ -46,17 +38,6 @@ void GameEngine::Renderer::Render()
 }
 void GameEngine::Renderer::RenderCustomImguiUI()
 {
-	static bool checkBox = false;
-	static ImVec4 color = ImVec4(114.0f / 255.0f, 144.0f / 255.0f, 154.0f / 255.0f, 200.0f / 255.0f);
-	ImGui::Begin("Window");
-	ImGui::Text("Gamemodes:");
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(7.0f, 0.6f, 0.6f));
-	if (ImGui::Button("Single Player", ImVec2{ 100.f,25.f }))
-		std::cout << "Single Player pressed";
-	ImGui::Button("co-op", ImVec2{ 100.f,25.f });
-	ImGui::Button("Versus", ImVec2{ 100.f,25.f });
-	ImGui::PopStyleColor(1);
-	ImGui::End();
 }
 void GameEngine::Renderer::RenderInstructionMenuUI()
 {

@@ -36,6 +36,30 @@ GridComponent::GridComponent(std::shared_ptr<GameObject> parent, const std::stri
 	m_offsets.x = m_BlockWidth / 2;
 	m_offsets.y = m_BlockHeight / 2;
 }
+void GridComponent::InitializeNewLevel(const std::string& gridFilePath, Gamemode mode, GameLevel level)
+{
+	m_Gamemode = mode;
+	m_Level = level;
+
+	ReadGridData(gridFilePath);
+
+	FillVector();
+
+	if (m_Blockpaths.size() == 2)
+	{
+		m_pBlockTextures.push_back(ResourceManager::GetInstance().LoadTexture(m_Blockpaths[0]));
+		m_pBlockTextures.push_back(ResourceManager::GetInstance().LoadTexture(m_Blockpaths[1]));
+	}
+	if (m_Blockpaths.size() == 3)
+	{
+		m_pBlockTextures.push_back(ResourceManager::GetInstance().LoadTexture(m_Blockpaths[0]));
+		m_pBlockTextures.push_back(ResourceManager::GetInstance().LoadTexture(m_Blockpaths[1]));
+		m_pBlockTextures.push_back(ResourceManager::GetInstance().LoadTexture(m_Blockpaths[2]));
+	}
+
+
+	MakeGrid();
+}
 void GridComponent::MakeGrid()
 {
 	auto gridBlock = std::make_shared<GameObject>();
@@ -190,6 +214,9 @@ void GridComponent::clearGrid()
 	{
 		m_pDisks[i]->SetIsActive(false);
 	}
+	//clearing 
+	m_pBlockTextures.clear();
+	m_Blockpaths.clear();
 	m_pDisks.clear();
 }
 void GridComponent::ReadGridData(const std::string& gridPath)

@@ -33,6 +33,8 @@ namespace GameEngine
 
 		bool NotifyGridblockToggle(IPoint2 pos, int gameMode,int deactivateOrActivate);
 
+		void InitializeNewLevel(const std::string& gridFilePath, Gamemode mode, GameLevel level);
+
 		std::weak_ptr<GameObject> checkForDisk(int lineHeight, int leftOrRight);
 
 		bool HasClearedLevel();

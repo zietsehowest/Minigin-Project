@@ -71,11 +71,8 @@ void ManagerComponent::Update(float)
 {
 	if (m_HasCompletedLevel)
 	{
-		auto grid = std::make_shared<GameObject>();
-		grid->AddComponent(std::make_shared<GridComponent>(grid, "../Data/Grid/GridInfo_"+ std::to_string((int)m_CurrentLevel) + ".txt", m_CurrentGamemode, m_CurrentLevel));
-		m_pGrid = grid;
+		m_pGrid.lock()->GetComponent<GridComponent>().lock()->InitializeNewLevel("../Data/Grid/GridInfo_"+ std::to_string((int)m_CurrentLevel) + ".txt", m_CurrentGamemode, m_CurrentLevel);
 		m_HasCompletedLevel = false;
-		SceneManager::GetInstance().GetCurrentScene().lock()->Add(m_pGrid.lock());
 	}
 
 	RemoveInactiveEnemies();
@@ -84,12 +81,17 @@ void ManagerComponent::Update(float)
 
 	if (!m_pGrid.expired() && m_pGrid.lock()->GetComponent<GridComponent>().lock()->HasClearedLevel()) // go to next level
 	{
-		m_HasCompletedLevel = true;
 		RemoveAllEnemies();
 
 		auto Audio = ServiceLocator::getAudio();
 		Audio->Play("Level_Complete", 1);
 		//reset level
+		m_CurrentLevel = GameLevel((int)m_CurrentLevel + 1);
+
+		if ((int)m_CurrentLevel > 2) //we finished the game !! go to endscreen
+		{
+
+		}
 	}
 }
 void ManagerComponent::InitializeSinglePlayer()

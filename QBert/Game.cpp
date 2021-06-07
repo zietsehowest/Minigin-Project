@@ -12,17 +12,21 @@
 #include "Audio.h"
 #include "GameAudio.h"
 #include "ServiceLocator.h"
+#include "StartScreenComponent.h"
 #pragma endregion
 using namespace std;
 using namespace GameEngine;
 void Game::LoadGame() const
 {
-	auto& scene = SceneManager::GetInstance().CreateScene("Level1");
+	auto& scene = SceneManager::GetInstance().CreateScene("startscreen");
 
 	auto go = std::make_shared<GameObject>();
 
-	go->AddComponent<>(std::make_shared<ManagerComponent>(go, Gamemode::versus));
+	go->AddComponent(std::make_shared<StartScreenComponent>(go));
+	go->AddComponent(std::make_shared<RenderComponent>(go));
+	go->GetComponent<RenderComponent>().lock()->SetTexture("../Data/startScreen_Background.png");
 	scene.Add(go);
+
 
 	ServiceLocator::provide(new GameAudio());
 	auto Audio = ServiceLocator::getAudio();
