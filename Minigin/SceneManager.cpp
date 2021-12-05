@@ -19,7 +19,7 @@ void SceneManager::SetCurrentScene(const std::string& sceneName)
 		m_CurrentScene = *it;
 	}
 	else
-		std::cout << "Scene doesn't excist !";
+		std::cout << "Scene doesn't exist !";
 }
 std::weak_ptr<Scene> SceneManager::GetCurrentScene() const
 {

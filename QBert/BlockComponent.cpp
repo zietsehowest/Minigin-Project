@@ -29,8 +29,8 @@ void BlockComponent::DownGradeBlock()
 {
 	if (m_CurrentState == BlockState::state1)
 		return;
-	else
-		m_CurrentState = BlockState((int)m_CurrentState - 1);
+		
+	m_CurrentState = BlockState((int)m_CurrentState - 1);
 }
 void BlockComponent::Update(float)
 {

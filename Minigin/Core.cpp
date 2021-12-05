@@ -90,7 +90,7 @@ void GameEngine::Core::Run()
 		auto lastTime = high_resolution_clock::now(); //get time before frame
 		while (doContinue)
 		{
-			auto currentTime = high_resolution_clock::now(); //get time before all updates start of each fraem
+			auto currentTime = high_resolution_clock::now(); //get time before all updates start of each frame
 			float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
 
 			doContinue = input.ProcessInput();

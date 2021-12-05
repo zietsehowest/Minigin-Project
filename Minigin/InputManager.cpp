@@ -16,7 +16,7 @@ bool GameEngine::InputManager::ProcessInput()
 	{
 		for (std::pair<KeyInput, std::shared_ptr<Command>> comm : m_ControlCommands)
 		{
-			if (comm.first.InputKey == m_KeyStroke.VirtualKey) //first check wheter the key that is pressed is linked to a command
+			if (comm.first.InputKey == m_KeyStroke.VirtualKey) //first check wether the key that is pressed is linked to a command
 			{
 				switch (comm.first.inputType) //check what input type is linked with this key
 				{
